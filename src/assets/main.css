@@ -1,0 +1,24 @@
+@import "./base.css";
+
+body {
+  background-color: var(--app-background-color);
+}
+
+.section:not(:first-of-type) {
+  margin-top: 0.5rem;
+}
+
+input, button {
+  border: 2px solid var(--app-divider-color);
+}
+input {
+  border-radius: 0;
+}
+button {
+  border-radius: var(--app-border-radius);
+}
+
+hr {
+  border: 1px solid var(--app-divider-color);
+  margin-block: 0.5rem;
+}

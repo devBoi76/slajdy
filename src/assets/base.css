@@ -1,0 +1,30 @@
+:root {
+  --app-border-radius: 0.5rem;
+  --app-background-color: #f3f3f3;
+  --app-foreground-color: white;
+  --app-foreground-hover-color: #f8f8f8;
+  --app-text-color: #3d3d3f;
+  --app-divider-color: #e4e4e4;
+  --app-accent-color: #ee866d;
+  --app-accent-color-light: #ffba84;
+  --app-font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--app-font-family);
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

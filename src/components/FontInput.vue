@@ -1,0 +1,48 @@
+<template>
+  <Card>
+    <h3>Czcionka</h3>
+    <div class="section">
+      <CSSSizeInput @input="modelValue.is_auto=false" :title="'Rozmiar'" :size="modelValue.size"></CSSSizeInput>
+    </div>
+    <div class="section">
+      <h4>Rodzaj</h4>
+      <div>
+        <input @input="modelValue.is_auto=false" id="font-family" v-model="modelValue.family" />
+      </div>
+    </div>
+    <div class="section">
+      <label>
+        Kolor Tekstu:
+        <ColorPicker v-model="modelValue.color"></ColorPicker>
+      </label>
+    </div>
+    <div class="section">
+      <button @click="$emit('update:modelValue', {family: editorStore.defaultFont.family, size: new Size(editorStore.defaultFont.size.v, editorStore.defaultFont.size.type), is_auto: true, color: editorStore.defaultFont.color} as FontOption)">Resetuj czcionkę</button>
+    </div>
+  </Card>
+</template>
+
+<script lang="ts" setup>
+import { Size, FontOption, useEditorStore } from "@/stores/editor"
+import Card from "@/components/Card.vue"
+import CSSSizeInput from "./CSSSizeInput.vue";
+import ColorPicker from "./ColorPicker.vue";
+
+const editorStore = useEditorStore()
+
+const props = defineProps<{
+  modelValue: FontOption
+}>()
+
+</script>
+
+
+<style>
+h3 {
+  border-bottom: 2px solid var(--app-divider-color);
+  margin-bottom: 0.5rem;
+}
+.card {
+  padding: 1rem;
+}
+</style>
