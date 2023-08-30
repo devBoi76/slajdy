@@ -5,8 +5,6 @@
 </template>
 
 <script lang="ts">
-import HelloWorld from "@/components/HelloWorld.vue"
-import TheWelcome from "@/components/TheWelcome.vue"
 import Editor from "@/components/Editor.vue"
 import { defineComponent, ref } from "vue"
 import { useEditorStore } from "@/stores/editor"
