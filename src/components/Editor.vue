@@ -2,8 +2,8 @@
   <div class="wrapper">
     <EditorCanvas ref="veditorcanvas"></EditorCanvas>
     <div id="editor-page">
-      <FontInput v-if="editorStore.selectedElement" v-model="editorStore.selectedElement.font"></FontInput>
-      <FontInput v-else v-model="editorStore.defaultFont"></FontInput>
+      <FontInput v-if="editorStore.selectedElement" :title="'Czcionka'"  v-model="editorStore.selectedElement.font"></FontInput>
+      <FontInput v-else :title="'Domyślna czcionka'" v-model="editorStore.defaultFont"></FontInput>
 
         <Card v-if="editorStore.selectedElementID != -1">
           <div class="section" v-if="editorStore.selectedElement?.type == 'text'">
@@ -18,8 +18,7 @@
           </div>
           <div class="section" v-if="editorStore.selectedElement?.type == 'image'">
             <h4>Zdjęcie</h4>
-            <!-- <input  type="file" accept="image/*" multiple="false" v-on:change=" (ev) => {editorStore.selectedElement.value = fileToSRC((ev.target as HTMLInputElement).files![0])}"> -->
-            <ImagePicker v-model="editorStore.selectedElement!.value"></ImagePicker>
+            <ImagePickerModal ref="vimagepickermodal" v-model="editorStore.selectedElement.value" :default-image-sources="defaultImageSources"></ImagePickerModal>
           </div>
           <div class="section">
             <CSSSizeInput :hidden_types="['auto']" :title="'Odstęp'" :size="editorStore.getElementModel(editorStore.selectedElementID).padding"></CSSSizeInput>
@@ -37,24 +36,28 @@
       </Card>
     </div>
   </div>
+  
 
 </template>
 
-
+// TODO: https://www.npmjs.com/package/html-to-image zapisywanie zdjęcia
 
 <script setup lang="ts">
 import EditorCanvas from "./EditorCanvas.vue"
 import FontInput from "@/components/input/FontInput.vue"
 import { useEditorStore } from "@/stores/editor";
-import { defineComponent, ref, type Ref } from "vue"
+import { defineComponent, nextTick, ref, type Ref } from "vue"
 import Card from "./Card.vue";
 import CSSSizeInput from "./input/CSSSizeInput.vue";
 import ImagePicker from "./input/ImagePicker.vue";
 import IconQuotes from "@/components/icons/IconQuotes.vue"
 import Modal from "@/components/Modal.vue";
+import ImagePickerModal from "./modals/ImagePickerModal.vue";
 
 
 const veditorcanvas = ref<InstanceType<typeof EditorCanvas> | null>(null)
+const vimagepickermodal = ref<InstanceType<typeof ImagePickerModal> | null>(null)
+
 const editorStore = useEditorStore()
 </script>
 
@@ -65,8 +68,9 @@ const editorStore = useEditorStore()
 export default defineComponent({
   expose: ["getCanvas"],
   methods: {
-    getCanvas() : InstanceType<typeof EditorCanvas> {console.log("here");return this.$refs.veditorcanvas as InstanceType<typeof EditorCanvas>},
-    fileToSRC(file: File) {return URL.createObjectURL(file)}
+    getCanvas() : InstanceType<typeof EditorCanvas> {return this.$refs.veditorcanvas as InstanceType<typeof EditorCanvas>},
+    getImagePickerModal() : InstanceType<typeof ImagePickerModal> {return this.$refs.vimagepickermodal as InstanceType<typeof ImagePickerModal>},
+    fileToSRC(file: File) {return URL.createObjectURL(file)},
   },
   computed: {
     defaultImageSources() {

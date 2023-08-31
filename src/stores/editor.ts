@@ -36,7 +36,7 @@ export class Size {
 export class FontOption {
   constructor(f?: FontOption) {
     this.family = f ? f.family : "Times"
-    this.size = f ? new Size(f.size.v, f.size.type) : new Size(24, "pt")
+    this.size = f ? new Size(f.size.v, f.size.type) : new Size(32, "pt")
     this.is_auto = f ? f.is_auto : true
     this.color = f ? f.color : "#000000"
   }
@@ -151,6 +151,7 @@ export const useEditorStore = defineStore("editor", {
         value: type == "text" ? "Wybierz aby edytować..." : "",
         font: new FontOption(this.defaultFont)
       })
+      this.selectedElementID = this.nextID
       this.nextID += 1
     },
 
@@ -235,7 +236,7 @@ function defaultElements(): Map<number, ElementModel> {
     id: 0,
     type: "text",
     fancyquotes: true,
-    value: "Mój werset..",
+    value: "Wybierz aby edytować...",
     dragged: false,
     padding: new Size(0.25, "rem"),
     width: new Size(0, "auto"),

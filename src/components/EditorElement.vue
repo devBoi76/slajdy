@@ -7,8 +7,9 @@
       :style="stylingCSS"
     >
       <p
-        :style="`color: ${thisElement().font.color}`" 
-        v-if="model.type == 'text'">
+        :style="`color: ${thisElement().font.color}`"
+        v-if="model.type == 'text'"
+      >
         {{ model.fancyquotes ? "„" : "" }}{{ model.value
         }}{{ model.fancyquotes ? "”" : "" }}
       </p>
@@ -83,8 +84,16 @@ export default defineComponent({
         padding: `${this.thisElement().padding.string}`,
         width: `${this.thisElement().width.string}`,
         height: `${this.thisElement().height.string}`,
-        fontSize: `${!this.thisElement().font.is_auto ? this.thisElement().font?.size.string : "var(--font-size)"}`,
-        fontFamily: `${!this.thisElement().font.is_auto ? this.thisElement().font?.family : "inherit"}`,
+        fontSize: 
+          !this.thisElement().font.is_auto
+            ? `calc(${this.thisElement().font?.size.string}*${this.editorStore.canvasRect.width/1920})`
+            : `calc(var(--font-size)*${this.editorStore.canvasRect.width/1920})`
+        ,
+        fontFamily: `${
+          !this.thisElement().font.is_auto
+            ? this.thisElement().font?.family
+            : "inherit"
+        }`
       }
     }
   },
@@ -119,7 +128,7 @@ img {
   background-color: var(--app-background-color);
   aspect-ratio: 1/1;
   border: 2px solid var(--app-accent-color);
-  z-index: 9999999;
+  z-index: 999;
   width: var(--sz);
   height: var(--sz);
   display: flex;
@@ -136,7 +145,7 @@ img {
   background-color: var(--app-background-color);
   aspect-ratio: 1/1;
   border: 2px solid red;
-  z-index: 9999999;
+  z-index: 999;
   width: var(--sz);
   height: var(--sz);
   display: flex;

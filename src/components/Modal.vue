@@ -4,7 +4,7 @@
       <div class="wrapper">
             <header>
                 <h1>{{ title }}</h1>
-                <IconX @click.self="close()"></IconX>
+                <IconX @click="close()"></IconX>
             </header>
             <main>
               <slot>
@@ -35,7 +35,7 @@ h1 {
 }
 
 main {
-  max-height: 30rem;
+  max-height: 40rem;
   overflow-y: scroll;
 }
 header {
@@ -59,9 +59,9 @@ header {
 .wrapper {
   border-radius: var(--app-border-radius);
   width: 80%;
-  min-height: 10rem;
+  min-height: 50rem;
   background-color: var(--app-foreground-color);
-  margin: auto;
+  margin: 2rem auto auto auto;
   z-index: 1001;
 }
 .background {
@@ -89,9 +89,10 @@ import { defineComponent } from "vue"
 import IconX from "./icons/IconX.vue";
 
 export default defineComponent({
+  expose: ["close", "open"],
   data() {
     return {
-      isOpen: true
+      isOpen: false
     }
   },
   methods: {

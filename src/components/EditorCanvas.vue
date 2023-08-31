@@ -13,9 +13,9 @@ const editorStore = useEditorStore()
       @click="editorStore.selectedElementID = -1"
     >
       <canvas
-        :width="vcanvasfield?.getBoundingClientRect().width"
-        :height="vcanvasfield?.getBoundingClientRect().height"
-        :style="canvasCss"
+        :width="editorStore.canvasRect.width"
+        :height="editorStore.canvasRect.height"
+
         id="editor-canvas"
       ></canvas>
       <EditorElement
@@ -29,9 +29,8 @@ const editorStore = useEditorStore()
 
 <script lang="ts">
 import { defineComponent, ref, watch } from "vue"
-import IconLogo from "./icons/IconLogo.vue"
 
-import { useEditorStore, DragGuideSource, Orientation, DragGuide } from "@/stores/editor"
+import { useEditorStore, DragGuideSource, Orientation } from "@/stores/editor"
 import EditorElement from "@/components/EditorElement.vue"
 
 export default defineComponent({
@@ -40,7 +39,6 @@ export default defineComponent({
     const editorStore = useEditorStore()
 
     const vcanvasfield = ref<InstanceType<typeof HTMLDivElement> | null>(null)
-    // TODO: Separate this watch and vguide watch
 
     return { editorStore: editorStore, vcanvasfield }
   },
@@ -48,6 +46,15 @@ export default defineComponent({
     this.editorStore.canvasRect = document
       .getElementById("editor-canvas")!
       .getBoundingClientRect()
+
+    const obs = new ResizeObserver(() => {
+      this.editorStore.canvasRect = document
+      .getElementById("canvas")!
+      .getBoundingClientRect()
+    })
+
+    obs.observe(document.getElementById("canvas")!)
+
   },
   methods: {
     drawDragLines() {
@@ -58,31 +65,20 @@ export default defineComponent({
       painter.clearRect(
         0,
         0,
-        this.editorStore.canvasRect.width+2,
-        this.editorStore.canvasRect.height+2
+        this.editorStore.canvasRect.width + 2,
+        this.editorStore.canvasRect.height + 2
       )
+
+      // painter.setLineDash([8, 8])
 
       if (this.editorStore.draggedElementID != -1) {
         painter.lineWidth = 1
-        painter.setLineDash([8, 8])
         painter.strokeStyle = "black"
 
         for (const l of this.editorStore.hDragGuides) {
           if (l.type == DragGuideSource.Element) continue
 
-          let lx = l.value * this.editorStore.canvasRect.width
-          painter.strokeStyle = l.color
-          painter.beginPath()
-          painter.moveTo(lx, 0)
-          painter.lineTo(lx, this.editorStore.canvasRect.height)
-          painter.closePath()
-          painter.stroke()
-        }
-
-        for (const l of this.editorStore.vDragGuides) {
-          if (l.type == DragGuideSource.Element) continue
-          
-          let ly = l.value * this.editorStore.canvasRect.height
+          let ly = Math.round(l.value * this.editorStore.canvasRect.height)
           painter.strokeStyle = l.color
           painter.beginPath()
           painter.moveTo(0, ly)
@@ -91,19 +87,31 @@ export default defineComponent({
           painter.stroke()
         }
 
+        for (const l of this.editorStore.vDragGuides) {
+          if (l.type == DragGuideSource.Element) continue
+
+          let lx = Math.round(l.value * this.editorStore.canvasRect.width)
+
+          painter.strokeStyle = l.color
+          painter.beginPath()
+          painter.moveTo(lx, 0)
+          painter.lineTo(lx, this.editorStore.canvasRect.height)
+          painter.closePath()
+          painter.stroke()
+        }
+
         for (const l of this.editorStore.highlightedGuides) {
-          painter.strokeStyle = "blue"
           painter.beginPath()
 
           switch (l.orientation) {
             case Orientation.Horizontal:
-              let lx = l.value * this.editorStore.canvasRect.width
+              let lx = Math.round(l.value * this.editorStore.canvasRect.width)
               painter.strokeStyle = "red"
               painter.moveTo(lx, 0)
               painter.lineTo(lx, this.editorStore.canvasRect.height)
               break
             case Orientation.Vertical:
-              let ly = l.value * this.editorStore.canvasRect.height
+              let ly = Math.round(l.value * this.editorStore.canvasRect.height)
               painter.strokeStyle = "blue"
               painter.moveTo(0, ly)
               painter.lineTo(this.editorStore.canvasRect.width, ly)
@@ -126,12 +134,16 @@ export default defineComponent({
           this.editorStore.defaultFont.size.type
       }
     },
-    canvasCss() {
-      return {
-        width: `${Math.floor(this.vcanvasfield?.getBoundingClientRect().width!)}px`,
-        height: `${Math.floor(this.vcanvasfield?.getBoundingClientRect().height!)}px`
-      }
-    },
+    // canvasCss() {
+    //   return {
+    //     width: `${Math.floor(
+    //       this.vcanvasfield?.getBoundingClientRect().width!
+    //     )}px`,
+    //     height: `${Math.floor(
+    //       this.vcanvasfield?.getBoundingClientRect().height!
+    //     )}px`
+    //   }
+    // },
     canvasRect() {
       return document.getElementById("canvas")?.getBoundingClientRect()
     }
