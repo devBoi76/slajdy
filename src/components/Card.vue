@@ -11,5 +11,6 @@
   margin-bottom: 1rem;
   border-bottom: 1px solid var(--app-divider-color);
   width: 20rem;
+  padding: 1rem;
 }
 </style>

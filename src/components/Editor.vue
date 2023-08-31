@@ -37,19 +37,21 @@
       </Card>
     </div>
   </div>
+
 </template>
 
 
 
 <script setup lang="ts">
 import EditorCanvas from "./EditorCanvas.vue"
-import FontInput from "@/components/FontInput.vue"
+import FontInput from "@/components/input/FontInput.vue"
 import { useEditorStore } from "@/stores/editor";
 import { defineComponent, ref, type Ref } from "vue"
 import Card from "./Card.vue";
-import CSSSizeInput from "./CSSSizeInput.vue";
-import ImagePicker from "./ImagePicker.vue";
+import CSSSizeInput from "./input/CSSSizeInput.vue";
+import ImagePicker from "./input/ImagePicker.vue";
 import IconQuotes from "@/components/icons/IconQuotes.vue"
+import Modal from "@/components/Modal.vue";
 
 
 const veditorcanvas = ref<InstanceType<typeof EditorCanvas> | null>(null)
@@ -65,11 +67,25 @@ export default defineComponent({
   methods: {
     getCanvas() : InstanceType<typeof EditorCanvas> {console.log("here");return this.$refs.veditorcanvas as InstanceType<typeof EditorCanvas>},
     fileToSRC(file: File) {return URL.createObjectURL(file)}
+  },
+  computed: {
+    defaultImageSources() {
+      // const r = await fetch(`https://api.unsplash.com/photos/random?count=${n}`)
+      // const j = await r.json()
+      // console.log(j)
+      const imgs = []
+      const n = 10
+      for (let i = 0; i < n; i++) {
+        imgs.push(`https://imgs.search.brave.com/0obG6rVTJLsFrFxA-zQH_z6FJ2BNfrpMDoIEJCwhlzQ/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzAxLzExLzM1LzU0/LzM2MF9GXzExMTM1/NTQ2OF9URXF1UE1n/dE5kaG8xTk1adTEy/Znl5V3hnUm5kWVpp/ci5qcGc`)
+      }
+      return imgs
+
+    }
   }
 })
 </script>
 
-<style>
+<style scoped>
 .wrapper {
   display: flex;
 }
