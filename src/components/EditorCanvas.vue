@@ -15,7 +15,6 @@ const editorStore = useEditorStore()
       <canvas
         :width="editorStore.canvasRect.width"
         :height="editorStore.canvasRect.height"
-
         id="editor-canvas"
       ></canvas>
       <EditorElement
@@ -29,12 +28,14 @@ const editorStore = useEditorStore()
 
 <script lang="ts">
 import { defineComponent, ref, watch } from "vue"
+import { toPng } from "html-to-image"
+
 
 import { useEditorStore, DragGuideSource, Orientation } from "@/stores/editor"
 import EditorElement from "@/components/EditorElement.vue"
 
 export default defineComponent({
-  expose: ["drawDragLines"],
+  expose: ["drawDragLines", "getImageURI"],
   setup() {
     const editorStore = useEditorStore()
 
@@ -49,15 +50,20 @@ export default defineComponent({
 
     const obs = new ResizeObserver(() => {
       this.editorStore.canvasRect = document
-      .getElementById("canvas")!
-      .getBoundingClientRect()
+        .getElementById("canvas")!
+        .getBoundingClientRect()
     })
 
     obs.observe(document.getElementById("canvas")!)
-
   },
   methods: {
-    drawDragLines() {
+    async getImageURI() : Promise<string> {
+      this.vcanvasfield?.style
+      const promise = toPng(document.getElementById("canvas")!, {pixelRatio: 1920/this.canvasRect!.width})
+
+      return promise
+    },
+    drawDragLines(idToShow: number) {
       const painter = (
         document.getElementById("editor-canvas") as HTMLCanvasElement
       ).getContext("2d")!
@@ -76,19 +82,8 @@ export default defineComponent({
         painter.strokeStyle = "black"
 
         for (const l of this.editorStore.hDragGuides) {
-          if (l.type == DragGuideSource.Element) continue
-
-          let ly = Math.round(l.value * this.editorStore.canvasRect.height)
-          painter.strokeStyle = l.color
-          painter.beginPath()
-          painter.moveTo(0, ly)
-          painter.lineTo(this.editorStore.canvasRect.width, ly)
-          painter.closePath()
-          painter.stroke()
-        }
-
-        for (const l of this.editorStore.vDragGuides) {
-          if (l.type == DragGuideSource.Element) continue
+          if (l.type == DragGuideSource.Element && l.sourceID != idToShow)
+            continue
 
           let lx = Math.round(l.value * this.editorStore.canvasRect.width)
 
@@ -96,6 +91,19 @@ export default defineComponent({
           painter.beginPath()
           painter.moveTo(lx, 0)
           painter.lineTo(lx, this.editorStore.canvasRect.height)
+          painter.closePath()
+          painter.stroke()
+        }
+
+        for (const l of this.editorStore.vDragGuides) {
+          if (l.type == DragGuideSource.Element && l.sourceID != idToShow)
+            continue
+
+          let ly = Math.round(l.value * this.editorStore.canvasRect.height)
+          painter.strokeStyle = l.color
+          painter.beginPath()
+          painter.moveTo(0, ly)
+          painter.lineTo(this.editorStore.canvasRect.width, ly)
           painter.closePath()
           painter.stroke()
         }
@@ -154,7 +162,6 @@ export default defineComponent({
 
 <style scoped>
 #canvas {
-  border: 2px solid var(--app-divider-color);
   width: 100%;
   height: 100%;
   background: var(--bgcolor);
@@ -164,6 +171,7 @@ export default defineComponent({
 }
 
 #canvas-wrapper {
+  border: 2px solid var(--app-divider-color);
   margin: 1rem 4rem auto 1rem;
   aspect-ratio: 16/9;
   flex-grow: 1;

@@ -86,7 +86,7 @@ button {
 
 .image-modal {
   display: grid;
-  grid-template-columns: repeat(7, auto);
+  grid-template-columns: repeat(6, auto);
   justify-content: space-evenly;
   column-gap: 1rem;
   row-gap: 0.5rem;
@@ -98,6 +98,27 @@ button {
   box-shadow: 0 0 0.25rem transparent;
   transition: box-shadow 150ms;
   cursor: pointer;
+  /* background-image:
+      linear-gradient(45deg, #ccc 25%, transparent 25%), 
+      linear-gradient(135deg, #ccc 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #ccc 75%),
+      linear-gradient(135deg, transparent 75%, #ccc 75%);
+    background-size:25px 25px;
+    background-position:0 0, 12.5px 0, 12.5px -12.5px, 0px 12.5px; */
+    /* background: 
+  repeating-linear-gradient(
+    to right, transparent, 
+    transparent 25px, 
+    white 25px, 
+    white 2rem
+  ),
+  repeating-linear-gradient(
+    to bottom, transparent,  
+    transparent 25px, 
+    white 25px, 
+    white 2rem
+  ),
+  linear-gradient(45deg, #ccc, #ccc); */
 }
 .default-image:hover {
   box-shadow: 0 0 0.25rem var(--app-accent-color);

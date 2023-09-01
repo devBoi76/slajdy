@@ -90,10 +90,11 @@ export enum DragGuideSource {
 
 
 export class DragGuide {
-  constructor(v: number, t: DragGuideSource, o: Orientation) {
+  constructor(v: number, t: DragGuideSource, o: Orientation, sourceID: number) {
     this.value = v
     this.type = t
     this.orientation = o
+    this.sourceID = sourceID
   }
 
   get color() : string {
@@ -103,6 +104,7 @@ export class DragGuide {
   value: number
   orientation: Orientation
   type: DragGuideSource
+  sourceID: number
 }
 
 export const useEditorStore = defineStore("editor", {
@@ -146,7 +148,7 @@ export const useEditorStore = defineStore("editor", {
         dragged: false,
         type: type,
         padding: new Size(0.25, "rem"),
-        width: new Size(0, "auto"),
+        width: new Size(type=="text" ? -1 : 4, type=="text" ? "auto" : "rem"),
         height: new Size(0, "auto"),
         value: type == "text" ? "Wybierz aby edytować..." : "",
         font: new FontOption(this.defaultFont)
@@ -155,16 +157,14 @@ export const useEditorStore = defineStore("editor", {
       this.nextID += 1
     },
 
-    getClosestHGuide(xx: number) : DragGuide {
+    getClosestHGuide(xx: number, filterfn: (g: DragGuide) => boolean) : DragGuide {
 
-      this.hDragGuides.sort( (a, b) => Math.abs(a.value - xx) - Math.abs(b.value - xx))
-      return this.hDragGuides[0]
+      return this.hDragGuides.sort( (a, b) => Math.abs(a.value - xx) - Math.abs(b.value - xx)).filter(v=>filterfn(v))[0]
     },
 
-    getClosestVGuide(yy: number) : DragGuide {
+    getClosestVGuide(yy: number, filterfn: (g: DragGuide) => boolean) : DragGuide {
 
-      this.vDragGuides.sort( (a, b) => Math.abs(a.value - yy) - Math.abs(b.value - yy))
-      return this.vDragGuides[0]
+      return this.vDragGuides.sort( (a, b) => Math.abs(a.value - yy) - Math.abs(b.value - yy)).filter(v=>filterfn(v))[0]
     },
     getElementModel(id: number): ElementModel {
       if (!this.elements.has(id)) {
@@ -193,14 +193,14 @@ export const useEditorStore = defineStore("editor", {
     gatherDragGuides() {
 
       this.hDragGuides = [
-        new DragGuide(0, DragGuideSource.Page, Orientation.Horizontal),
-        new DragGuide(0.5, DragGuideSource.Page, Orientation.Horizontal),
-        new DragGuide(1, DragGuideSource.Page, Orientation.Horizontal)
+        new DragGuide(0, DragGuideSource.Page, Orientation.Horizontal, -1),
+        new DragGuide(0.5, DragGuideSource.Page, Orientation.Horizontal, -1),
+        new DragGuide(1, DragGuideSource.Page, Orientation.Horizontal, -1)
       ]
       this.vDragGuides = [
-        new DragGuide(0, DragGuideSource.Page, Orientation.Vertical),
-        new DragGuide(0.5, DragGuideSource.Page, Orientation.Vertical),
-        new DragGuide(1, DragGuideSource.Page, Orientation.Vertical)
+        new DragGuide(0, DragGuideSource.Page, Orientation.Vertical, -1),
+        new DragGuide(0.5, DragGuideSource.Page, Orientation.Vertical, -1),
+        new DragGuide(1, DragGuideSource.Page, Orientation.Vertical, -1)
       ]
 
       for (const [id, el] of this.elements) {
@@ -208,23 +208,23 @@ export const useEditorStore = defineStore("editor", {
           el.rect().left,
           this.canvasRect.left,
           this.canvasRect.right
-        ), DragGuideSource.Element, Orientation.Horizontal))
+        ), DragGuideSource.Element, Orientation.Horizontal, el.id))
         this.hDragGuides.push(new DragGuide(pageCoordToCanvas(
           el.rect().right,
           this.canvasRect.left,
           this.canvasRect.right
-        ), DragGuideSource.Element, Orientation.Horizontal))
+        ), DragGuideSource.Element, Orientation.Horizontal, el.id))
 
         this.vDragGuides.push(new DragGuide(pageCoordToCanvas(
           el.rect().top,
           this.canvasRect.top,
           this.canvasRect.bottom
-        ), DragGuideSource.Element, Orientation.Vertical))
+        ), DragGuideSource.Element, Orientation.Vertical, el.id))
         this.vDragGuides.push(new DragGuide(pageCoordToCanvas(
           el.rect().bottom,
           this.canvasRect.top,
           this.canvasRect.bottom
-        ), DragGuideSource.Element, Orientation.Vertical))
+        ), DragGuideSource.Element, Orientation.Vertical, el.id))
       }
     }
   }

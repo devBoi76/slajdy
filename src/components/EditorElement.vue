@@ -4,7 +4,7 @@
       class="outer"
       @click.stop="setActiveComponent"
       :class="{ active: isActive }"
-      :style="stylingCSS"
+      :style="model.type != 'image' ? stylingCSS : {lineHeight: '0'}"
     >
       <p
         :style="`color: ${thisElement().font.color}`"
@@ -13,7 +13,7 @@
         {{ model.fancyquotes ? "„" : "" }}{{ model.value
         }}{{ model.fancyquotes ? "”" : "" }}
       </p>
-      <img v-else-if="model.type == 'image'" :src="model.value" />
+      <img v-else-if="model.type == 'image'" :src="model.value" :style="stylingCSS"/>
       <p v-else>Unknown component type! `{{ model }}`</p>
 
       <div
@@ -93,7 +93,8 @@ export default defineComponent({
           !this.thisElement().font.is_auto
             ? this.thisElement().font?.family
             : "inherit"
-        }`
+        }`,
+        boxSizing: "content-box" as const
       }
     }
   },
@@ -107,8 +108,8 @@ p {
 }
 
 img {
-  min-height: 2rem;
-  min-width: 2rem;
+  min-height: 4rem;
+  min-width: 4rem;
   width: 100%;
 }
 
