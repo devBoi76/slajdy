@@ -13,7 +13,7 @@ export const useCounterStore = defineStore("counter", () => {
   return { count, doubleCount, increment }
 })
 
-export const font_size_type = ["pt", "px", "rem", "auto"] as const
+export const font_size_type = ["pt", "%", "rem", "auto"] as const
 export type SizeType = (typeof font_size_type)[number]
 
 export class Size {
@@ -31,6 +31,10 @@ export class Size {
     console.log(this.v, this.type)
     if (this.type != "auto") return `${this.v}${this.type}`
     else return `auto`
+  }
+
+  get scales() {
+    return this.type != "%"
   }
 }
 
@@ -113,6 +117,18 @@ export class DragGuide {
   sourceID: number
 }
 
+export enum DraggedElementType {
+  Move,
+  ExpandX,
+  ExpandY,
+  ExpandXY
+}
+
+export type DraggedElement = {
+  sourceID: number,
+  type: DraggedElementType
+} | null
+
 export const useEditorStore = defineStore("editor", {
   state: () => {
     return {
@@ -123,7 +139,7 @@ export const useEditorStore = defineStore("editor", {
       } as CanvasColors,
 
       selectedElementID: -1,
-      draggedElementID: -1,
+      draggedElementID: null as DraggedElement,
       nextID: 1,
       elements: defaultElements(),
       hDragGuides: [] as DragGuide[],
@@ -146,10 +162,10 @@ export const useEditorStore = defineStore("editor", {
       this.elements = t.map
       this.nextID = t.nextID
       this.selectedElementID = -1
-      this.draggedElementID = -1
+      this.draggedElementID = null
     },
     deleteElement(id: number) {
-      if (this.draggedElementID == id) this.setDragged(-1)
+      if (this.draggedElementID?.sourceID == id) this.setDragged(null)
       if (this.selectedElementID == id) this.selectedElementID = -1
 
       this.elements.delete(id)
@@ -164,7 +180,7 @@ export const useEditorStore = defineStore("editor", {
         dragged: false,
         type: type,
         padding: new Size(0.25, "rem"),
-        width: new Size(type=="text" ? -1 : 4, type=="text" ? "auto" : "rem"),
+        width: new Size(type=="text" ? -1 : 8, type=="text" ? "auto" : "rem"),
         height: new Size(0, "auto"),
         value: type == "text" ? "Wybierz aby edytować..." : "",
         font: new FontOption(this.defaultFont)
@@ -189,19 +205,18 @@ export const useEditorStore = defineStore("editor", {
       return this.elements.get(id)!
     },
 
-    setDragged(id: number) {
+    setDragged(id: DraggedElement) {
       console.log(id)
       
 
-      if (this.draggedElementID != -1) {
-        this.getElementModel(this.draggedElementID).dragged = false
+      if (this.draggedElementID) {
+        this.getElementModel(this.draggedElementID.sourceID).dragged = false
       }
       this.gatherDragGuides()
-      if (id == -1) {
-      }
+
       this.draggedElementID = id
-      if (id != -1) {
-        this.getElementModel(id).dragged = true
+      if (id) {
+        this.getElementModel(id.sourceID).dragged = true
       }
 
     },

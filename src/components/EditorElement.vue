@@ -19,7 +19,7 @@
       <div
         class="move-button"
         v-if="isActive"
-        @mousedown="editorStore.setDragged(model.id)"
+        @mousedown="editorStore.setDragged({sourceID: model.id, type: DraggedElementType.Move})"
       >
         <IconMove />
       </div>
@@ -27,6 +27,10 @@
       <div class="trash-button" v-if="isActive" @mousedown="deleteElement">
         <IconTrash />
       </div>
+      <div class="expander-both" @mousedown="editorStore.setDragged({sourceID: model.id, type: DraggedElementType.ExpandXY})"></div>
+
+      <div class="expander-bottom" @mousedown="editorStore.setDragged({sourceID: model.id, type: DraggedElementType.ExpandY})"></div>
+      <div class="expander-right" @mousedown="editorStore.setDragged({sourceID: model.id, type: DraggedElementType.ExpandX})"></div>
     </div>
   </div>
 </template>
@@ -34,7 +38,7 @@
 <script lang="ts">
 import { defineComponent, ref, type PropType } from "vue"
 
-import { useEditorStore, type ElementModel, Vec2 } from "@/stores/editor"
+import { useEditorStore, type ElementModel, Vec2, DraggedElementType } from "@/stores/editor"
 import IconMove from "./icons/IconMove.vue"
 
 import IconTrash from "./icons/IconTrash.vue"
@@ -56,7 +60,7 @@ export default defineComponent({
 
   setup() {
     const editorStore = useEditorStore()
-    return { editorStore: editorStore }
+    return { editorStore: editorStore, DraggedElementType }
   },
   mounted() {
     if (this.shouldBind) {
@@ -84,14 +88,14 @@ export default defineComponent({
     positionCss() {
       return {
         left: `calc(${this.model.position.x * 100}%)`,
-        top: `calc(${this.model.position.y * 100}%)`
+        top: `calc(${this.model.position.y * 100}%)`,
+        width: `calc(${this.model.width.string}*${this.model.width.scales ? this.scale : 1})`,
+        height: `calc(${this.model.height.string}*${this.model.height.scales ? this.scale : 1})`,
       }
     },
     stylingCSS() {
       return {
-        padding: `calc(${this.model.padding.string}*${this.scale})`,
-        width: `calc(${this.model.width.string}*${this.scale})`,
-        height: `calc(${this.model.height.string}*${this.scale})`,
+        padding: `calc(${this.model.padding.string}*${this.model.padding.scales ? this.scale : 1})`,
         fontSize: 
           !this.model.font.is_auto
             ? `calc(${this.model.font?.size.string}*${this.scale})`
@@ -101,8 +105,7 @@ export default defineComponent({
           !this.model.font.is_auto
             ? this.model.font?.family
             : "inherit"
-        }`,
-        boxSizing: "content-box" as const
+        }`
       }
     }
   },
@@ -111,6 +114,45 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.expander-right {
+  z-index: 999;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: var(--sz);
+  width: calc(var(--sz)/2);
+}
+.outer.active .expander-right:hover {
+  cursor: e-resize;
+  background-image: linear-gradient(to right, transparent, var(--app-accent-color-light))
+}
+
+.expander-bottom {
+  z-index: 999;
+  position: absolute;
+  right: var(--sz);
+  left: 0;
+  bottom: 0;
+  height: calc(var(--sz)/2);
+}
+.outer.active .expander-bottom:hover {
+  cursor: s-resize;
+  background-image: linear-gradient(to bottom, transparent, var(--app-accent-color-light))
+}
+
+.expander-both {
+  z-index: 999;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: var(--sz);
+  width: var(--sz);
+}
+.outer.active .expander-both:hover {
+  cursor: se-resize;
+  background-image: linear-gradient(to bottom right, transparent, var(--app-accent-color-light))
+}
+
 p {
   text-align: center;
 }
@@ -119,6 +161,10 @@ img {
   min-height: calc(4rem*v-bind(scale));
   min-width: calc(4rem*v-bind(scale));
   width: 100%;
+  height: 100%;
+}
+img[src=""] {
+  border: 2px solid red;
 }
 
 .wrapper {
@@ -126,7 +172,8 @@ img {
   --sz: 2rem;
 }
 .outer {
-  width: fit-content;
+  width: 100%;
+  height: 100%;
   position: relative;
 }
 .move-button {

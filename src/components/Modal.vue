@@ -1,6 +1,6 @@
 <template>
   <Transition>
-    <div v-if="isOpen" class="background" :active="isOpen" @click.self="close()">
+    <div v-if="isOpen" class="background" @click.self="close()">
       <div class="wrapper">
             <header>
                 <h1>{{ title }}</h1>

@@ -5,12 +5,7 @@
     <div id="editor-topbar">
       <div class="topbar">
         <div class="section hr b">
-          <button
-            class="button-with-icon"
-            @click="saveBase64AsFile(veditorcanvas!.getImageURI(), 'slajd.png'); console.log(editorStore.elements)"
-          >
-            <IconSave /> Zapisz zdjęcie
-          </button>
+
 
           <button
             class="button-with-icon"
@@ -20,7 +15,7 @@
           </button>
           <button
             class="button-with-icon"
-            @click="editorStore.addElement(`image`); imageModalIsOpen=true"
+            @click="addImageAndOpen()"
           >
             <IconImage /> Dodaj zdjęcie
           </button>
@@ -36,8 +31,14 @@
           Cudzysłów
         </ButtonCheckbox>
         <div class="section hr bl ml-auto">
-          <button class="button-with-icon" @click="templateModalIsOpen=true"><IconUpload/>Załaduj template</button>
           <button class="button-with-icon" @click="saveURIAsFile(stringToSRC(JSON.stringify(editorStore.saveableElements), 'text/json'), 'template.json')"><IconDownload/>Zapisz na dysk</button>
+          <button class="button-with-icon" @click="templateModalIsOpen=true"><IconUpload/>Załaduj template</button>
+          <button
+            class="button-with-icon"
+            @click="saveBase64AsFile(veditorcanvas!.getImageURI(), 'slajd.png'); console.log(editorStore.elements)"
+          >
+            <IconSave /> Zapisz zdjęcie
+          </button>
         </div>
         <TemplateLoaderModal :is-open="templateModalIsOpen" @update:is-open="v=>templateModalIsOpen=v"></TemplateLoaderModal>
         
@@ -120,16 +121,25 @@ const vimagepickermodal = ref<InstanceType<typeof ImagePickerModal> | null>(
 )
 
 const editorStore = useEditorStore()
+
+const imageModalIsOpen = ref(false)
+
+async function addImageAndOpen() {
+  editorStore.addElement(`image`)
+  await nextTick()
+  imageModalIsOpen.value=true
+}
 </script>
 
 <script lang="ts">
+
 export default defineComponent({
   expose: ["getCanvas"],
   data() {
     return {
-      imageModalIsOpen: false,
+      // imageModalIsOpen: false,
       templateModalIsOpen: false,
-      Promise: Promise
+      Promise: Promise,
     }
   },
   methods: {

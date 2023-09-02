@@ -103,7 +103,7 @@ export default defineComponent({
 
       // painter.setLineDash([8, 8])
 
-      if (this.editorStore.draggedElementID != -1) {
+      if (this.editorStore.draggedElementID) {
         painter.lineWidth = 1
         painter.strokeStyle = "black"
 

@@ -14,7 +14,6 @@
         :src="source"
         @click="updateImage(source)"
       />
-      <!-- TODO: Replace ImagePicker with some kind of file icon + text "Wybierz z komputera" -->
       <ImagePicker @imageInput="(n: string) => {updateImage(n)}"></ImagePicker>
     </div>
   </Modal>
