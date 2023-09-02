@@ -205,6 +205,7 @@ export default defineComponent({
   grid-area: canvas;
   margin-right: 4rem;
   margin-bottom: auto;
+  border-radius: var(--app-border-radius);
 }
 header {
   display: flex;

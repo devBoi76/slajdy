@@ -32,8 +32,8 @@
           Cudzysłów
         </ButtonCheckbox>
         <div class="section hr" v-show="!editorStore.selectedElement">
-          <button class="button-with-icon" @click="saveURIAsFile(stringToSRC(JSON.stringify(editorStore.saveableElements), 'text/json'), 'template.json')"><IconDownload/>Zapisz szablon</button>
           <button class="button-with-icon" @click="templateModalIsOpen=true"><IconUpload/>Załaduj szablon</button>
+          <button class="button-with-icon" @click="saveURIAsFile(stringToSRC(JSON.stringify(editorStore.saveableElements), 'text/json'), 'template.json')"><IconDownload/>Zapisz szablon</button>
           <button
             class="button-with-icon"
             @click="saveBase64AsFile(veditorcanvas!.getImageURI(), 'slajd.png'); console.log(editorStore.elements)"
@@ -51,8 +51,6 @@
         <div class="section" v-if="editorStore.selectedElement?.type == 'text'">
           <h4>Tekst</h4>
           <textarea v-model="editorStore.selectedElement!.value"></textarea>
-          <hr />
-          <hr />
         </div>
         <div
           class="section"
@@ -254,6 +252,11 @@ export default defineComponent({
 #editor-page {
   /* font-size: 1.3rem; */
   grid-area: sidebar;
+}
+
+#editor-page > .card {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 textarea {
