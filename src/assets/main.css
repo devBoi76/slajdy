@@ -27,6 +27,10 @@ body {
   height: 100vh;
 }
 
+.ml-auto {
+  margin-left: auto;
+}
+
 .pointer {
   cursor: pointer;
 }

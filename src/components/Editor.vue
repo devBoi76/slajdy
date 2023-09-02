@@ -35,7 +35,7 @@
         <ButtonCheckbox v-if="editorStore.selectedElement?.type=='text'" v-model="editorStore.selectedElement.fancyquotes">
           Cudzysłów
         </ButtonCheckbox>
-        <div class="section hr bl">
+        <div class="section hr bl ml-auto">
           <button class="button-with-icon" @click="templateModalIsOpen=true"><IconUpload/>Załaduj template</button>
           <button class="button-with-icon" @click="saveURIAsFile(stringToSRC(JSON.stringify(editorStore.saveableElements), 'text/json'), 'template.json')"><IconDownload/>Zapisz na dysk</button>
         </div>
