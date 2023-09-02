@@ -117,14 +117,16 @@ export default defineComponent({
 .expander-right {
   z-index: 999;
   position: absolute;
-  right: 0;
+  right: -1rem;
+  padding-right: 1rem;
   top: 0;
   bottom: var(--sz);
   width: calc(var(--sz)/2);
 }
 .outer.active .expander-right:hover {
   cursor: e-resize;
-  background-image: linear-gradient(to right, transparent, var(--app-accent-color-light))
+  /* background-image: linear-gradient(to right, transparent, var(--app-accent-color-light)) */
+  border-right: 2px solid black;
 }
 
 .expander-bottom {
@@ -132,25 +134,33 @@ export default defineComponent({
   position: absolute;
   right: var(--sz);
   left: 0;
-  bottom: 0;
+  bottom: -1rem;
+  padding-bottom: 1rem;
   height: calc(var(--sz)/2);
 }
 .outer.active .expander-bottom:hover {
   cursor: s-resize;
-  background-image: linear-gradient(to bottom, transparent, var(--app-accent-color-light))
+  /* background-image: linear-gradient(to bottom, transparent, var(--app-accent-color-light)); */
+  border-bottom: 2px solid black;
+  box-sizing: content-box;
 }
 
 .expander-both {
   z-index: 999;
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: -1rem;
+  bottom: -1rem;
   height: var(--sz);
   width: var(--sz);
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  box-sizing: content-box;
 }
 .outer.active .expander-both:hover {
   cursor: se-resize;
-  background-image: linear-gradient(to bottom right, transparent, var(--app-accent-color-light))
+  /* background-image: linear-gradient(to bottom right, transparent, var(--app-accent-color-light)) */
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
 }
 
 p {

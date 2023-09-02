@@ -32,8 +32,8 @@
           Cudzysłów
         </ButtonCheckbox>
         <div class="section hr" v-show="!editorStore.selectedElement">
-          <button class="button-with-icon" @click="saveURIAsFile(stringToSRC(JSON.stringify(editorStore.saveableElements), 'text/json'), 'template.json')"><IconDownload/>Zapisz na dysk</button>
-          <button class="button-with-icon" @click="templateModalIsOpen=true"><IconUpload/>Załaduj template</button>
+          <button class="button-with-icon" @click="saveURIAsFile(stringToSRC(JSON.stringify(editorStore.saveableElements), 'text/json'), 'template.json')"><IconDownload/>Zapisz szablon</button>
+          <button class="button-with-icon" @click="templateModalIsOpen=true"><IconUpload/>Załaduj szablon</button>
           <button
             class="button-with-icon"
             @click="saveBase64AsFile(veditorcanvas!.getImageURI(), 'slajd.png'); console.log(editorStore.elements)"
