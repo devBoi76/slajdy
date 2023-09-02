@@ -26,7 +26,7 @@
         <ColorPicker v-model="modelValue.color"></ColorPicker>
       </label>
     </div>
-    <div class="section hr">
+    <!-- <div class="section hr">
       <button
         class="button-with-icon"
         v-if="modelValue != editorStore.defaultFont"
@@ -44,7 +44,7 @@
       >
         <IconRefreshCCW/> Domyślna czcionka
       </button>
-    </div>
+    </div> -->
 </template>
 
 <script lang="ts" setup>

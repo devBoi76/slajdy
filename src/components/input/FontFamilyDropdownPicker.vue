@@ -96,7 +96,7 @@ export default defineComponent({
   border: 2px solid var(--app-divider-color);
   border-radius: var(--app-border-radius);
   padding: 0.25rem;
-  font-size: 1rem;
+  font-size: var(--app-font-size);
   height: 2rem;
   position: relative;
   user-select: none;

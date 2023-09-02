@@ -15,7 +15,8 @@
 
 <style scoped>
 input[type="number"] {
-  width: 4rem;
+  width: 5rem;
+  text-overflow: ellipsis;
   height: 2rem;
   border-radius: var(--app-border-radius) 0 0 var(--app-border-radius);
   border: 2px solid var(--app-divider-color);

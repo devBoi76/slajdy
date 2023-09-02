@@ -14,6 +14,9 @@ input, button {
 input {
   border-radius: 0;
 }
+input, select {
+  font-size: var(--app-font-size);
+}
 button {
   border-radius: var(--app-border-radius);
 }

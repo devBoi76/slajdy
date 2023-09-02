@@ -155,6 +155,7 @@ export default defineComponent({
 
 p {
   text-align: center;
+  white-space: pre;
 }
 
 img {

@@ -11,7 +11,7 @@
 <style scoped>
 button {
     height: 2rem;
-    font-size: 1rem;
+    font-size: var(--app-font-size);
 }
 </style>
 

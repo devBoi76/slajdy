@@ -4,7 +4,7 @@
 
     <div id="editor-topbar">
       <div class="topbar">
-        <div class="section hr b">
+        <div class="section hr b" v-show="!editorStore.selectedElement">
 
 
           <button
@@ -24,13 +24,14 @@
         <InlineFontInput v-if="editorStore.selectedElement?.type == 'text'"
         :title="'Czcionka'"
         v-model="editorStore.selectedElement.font"></InlineFontInput>
-        <InlineFontInput v-else-if="editorStore.selectedElement?.type != 'image'"
+        <!-- <InlineFontInput v-else-if="editorStore.selectedElement?.type != 'image'"
         :title="'Domyślna czcionka'"
-        v-model="editorStore.defaultFont"></InlineFontInput>
+        v-model="editorStore.defaultFont"></InlineFontInput> -->
+
         <ButtonCheckbox v-if="editorStore.selectedElement?.type=='text'" v-model="editorStore.selectedElement.fancyquotes">
           Cudzysłów
         </ButtonCheckbox>
-        <div class="section hr bl ml-auto">
+        <div class="section hr" v-show="!editorStore.selectedElement">
           <button class="button-with-icon" @click="saveURIAsFile(stringToSRC(JSON.stringify(editorStore.saveableElements), 'text/json'), 'template.json')"><IconDownload/>Zapisz na dysk</button>
           <button class="button-with-icon" @click="templateModalIsOpen=true"><IconUpload/>Załaduj template</button>
           <button
@@ -76,7 +77,7 @@
           ></CSSSizeInput>
         </div>
 
-        <div class="section">
+        <!-- <div class="section">
           <CSSSizeInput
             :title="'Szerokość'"
             :size="
@@ -89,7 +90,7 @@
               editorStore.getElementModel(editorStore.selectedElementID).height
             "
           ></CSSSizeInput>
-        </div>
+        </div> -->
       </Card>
       <Card v-else></Card>
     </div>
@@ -201,7 +202,7 @@ export default defineComponent({
 .button-with-icon {
   display: inline-flex;
   /* align-items: center; */
-  font-size: 1rem;
+  font-size: var(--app-font-size);
   justify-content: space-between;
   margin-inline: 0.15rem;
   gap: 0.25rem;
@@ -251,7 +252,7 @@ export default defineComponent({
 
 #editor-page {
   margin: 4rem 4rem 0 0;
-  font-size: 1.3rem;
+  /* font-size: 1.3rem; */
   grid-area: sidebar;
 }
 
