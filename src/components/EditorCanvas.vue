@@ -198,11 +198,13 @@ export default defineComponent({
 
 #canvas-wrapper {
   border: 2px solid var(--app-divider-color);
-  margin: 1rem 4rem auto 1rem;
+  margin-bottom: auto;
+  margin-right: 4rem;
   aspect-ratio: 16/9;
-  flex-grow: 1;
   overflow: hidden;
   grid-area: canvas;
+  margin-right: 4rem;
+  margin-bottom: auto;
 }
 header {
   display: flex;

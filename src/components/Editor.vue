@@ -230,11 +230,12 @@ export default defineComponent({
 
 .wrapper {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
   grid-template-areas:
     "topbar topbar"
-    "canvas sidebar";
+    "sidebar canvas";
+  grid-gap: 1rem;
 }
 
 #editor-topbar {
@@ -251,7 +252,6 @@ export default defineComponent({
 }
 
 #editor-page {
-  margin: 4rem 4rem 0 0;
   /* font-size: 1.3rem; */
   grid-area: sidebar;
 }
