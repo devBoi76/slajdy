@@ -80,7 +80,12 @@ header {
 
 <script setup lang="ts">
 const props = defineProps<{
+  isOpen: boolean
   title: string
+}>()
+
+const emits = defineEmits<{
+  (e: 'update:isOpen', value: boolean): void
 }>()
 </script>
 
@@ -90,17 +95,17 @@ import IconX from "./icons/IconX.vue";
 
 export default defineComponent({
   expose: ["close", "open"],
-  data() {
-    return {
-      isOpen: false
-    }
-  },
+  // data() {
+  //   return {
+  //     isOpen: false
+  //   }
+  // },
   methods: {
     close() {
-      this.isOpen = false
+      this.$emit("update:isOpen", false)
     },
     open() {
-      this.isOpen = true
+      this.$emit("update:isOpen", true)
     }
   }
 })

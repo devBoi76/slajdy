@@ -18,7 +18,7 @@ const editorStore = useEditorStore()
         id="editor-canvas"
       ></canvas>
       <EditorElement
-        v-for="[id, el] in editorStore.elements"
+        v-for="[id, el] in model"
         :model="el"
         :key="id"
       />
@@ -31,11 +31,14 @@ import { defineComponent, ref, watch } from "vue"
 import { toPng } from "html-to-image"
 
 
-import { useEditorStore, DragGuideSource, Orientation } from "@/stores/editor"
+import { useEditorStore, DragGuideSource, Orientation, type ElementModel } from "@/stores/editor"
 import EditorElement from "@/components/EditorElement.vue"
 
 export default defineComponent({
   expose: ["drawDragLines", "getImageURI"],
+  props: {
+    model: {type: Map<number, ElementModel>, required: true}
+  },
   setup() {
     const editorStore = useEditorStore()
 

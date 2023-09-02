@@ -6,7 +6,7 @@
       <button @click="vimagemodal?.open()">Wybierz zdjęcie</button>
   </div>
 
-  <Modal ref="vimagemodal" :title="'Wybierz zdjęcie'">
+  <Modal :isOpen="isOpen" v-on:update:isOpen="v=>updateOpen(v)" ref="vimagemodal" :title="'Wybierz zdjęcie'">
     <div class="image-modal">
       <img
         class="default-image"
@@ -27,7 +27,13 @@
 
 const props = defineProps<{
     modelValue: string,
-    defaultImageSources: string[]
+    defaultImageSources: string[],
+    isOpen: boolean
+}>()
+
+const emits = defineEmits<{
+  (e: 'update:isOpen', value: boolean): void
+  (e: 'update:modelValue', value: string): void
 }>()
 
 const vimagemodal = ref<InstanceType<typeof Modal> | null>(null)
@@ -47,9 +53,13 @@ export default defineComponent({
             (this.$refs.vimagemodal as InstanceType<typeof Modal>).close()
             this.$emit("update:modelValue", value)
         },
-        open() {
-          (this.$refs.vimagemodal as InstanceType<typeof Modal>).open()
+        updateOpen(value: boolean) {
+          this.$emit("update:isOpen", value)
         }
+        // open() {
+          
+        //   // (this.$refs.vimagemodal as InstanceType<typeof Modal>).open()
+        // }
     }
 })
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <EditorCanvas ref="veditorcanvas"></EditorCanvas>
+    <EditorCanvas ref="veditorcanvas" :model="editorStore.elements"></EditorCanvas>
 
     <div id="editor-topbar">
       <div class="topbar">
@@ -20,7 +20,7 @@
           </button>
           <button
             class="button-with-icon"
-            @click="editorStore.addElement(`image`)"
+            @click="editorStore.addElement(`image`); imageModalIsOpen=true"
           >
             <IconImage /> Dodaj zdjęcie
           </button>
@@ -32,16 +32,13 @@
         <InlineFontInput v-else-if="editorStore.selectedElement?.type != 'image'"
         :title="'Domyślna czcionka'"
         v-model="editorStore.defaultFont"></InlineFontInput>
-        <!-- <label v-if="editorStore.selectedElement"> -->
-          <ButtonCheckbox v-if="editorStore.selectedElement" v-model="editorStore.selectedElement.fancyquotes">
-              Cudzysłów
-          </ButtonCheckbox>
-          <!-- <input
-                id="fancyquotes-check"
-                type="checkbox"
-                v-model="editorStore.selectedElement.fancyquotes"
-              />
-        </label> -->
+        <ButtonCheckbox v-if="editorStore.selectedElement?.type=='text'" v-model="editorStore.selectedElement.fancyquotes">
+          Cudzysłów
+        </ButtonCheckbox>
+        <div class="section hr bl">
+          <button class="button-with-icon">Załaduj template</button>
+        </div>
+        
       </div>
     </div>
 
@@ -73,6 +70,8 @@
             ref="vimagepickermodal"
             v-model="editorStore.selectedElement.value"
             :default-image-sources="defaultImageSources"
+            :is-open="imageModalIsOpen"
+            @update:is-open="v=>imageModalIsOpen=v"
           ></ImagePickerModal>
         </div>
         <div class="section">
@@ -100,6 +99,7 @@
           ></CSSSizeInput>
         </div>
       </Card>
+      <Card v-else></Card>
     </div>
   </div>
 </template>
@@ -135,6 +135,11 @@ const editorStore = useEditorStore()
 <script lang="ts">
 export default defineComponent({
   expose: ["getCanvas"],
+  data() {
+    return {
+      imageModalIsOpen: false
+    }
+  },
   methods: {
     getCanvas(): InstanceType<typeof EditorCanvas> {
       return this.$refs.veditorcanvas as InstanceType<typeof EditorCanvas>
@@ -192,6 +197,10 @@ export default defineComponent({
   border-right: 1px solid var(--app-divider-color);
   padding-right: 0.75rem;
 }
+.section.hr.bl {
+  border-left: 1px solid var(--app-divider-color);
+  padding-left: 0.75rem;
+}
 
 /* .button-with-icon:first-of-type {
   border-top-left-radius: var(--app-border-radius);
@@ -221,6 +230,7 @@ export default defineComponent({
   display: flex;
   align-items: end;
   gap: 0.75rem;
+  height: 5rem;
 }
 
 #editor-page {
