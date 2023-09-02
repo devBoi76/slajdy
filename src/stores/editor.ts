@@ -359,4 +359,4 @@ function buildTemplatesFromArr(ts: typeof templatate_definitions): TemplateFN[] 
 
 type TemplateFN = (TID: number) => TemplateT
 
-export const templates: TemplateFN[] = [...buildTemplatesFromArr(templatate_definitions), defaultTemplate] as const
+export const templates: TemplateFN[] = [...buildTemplatesFromArr(templatate_definitions), defaultTemplate]
