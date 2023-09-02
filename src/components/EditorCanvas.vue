@@ -176,6 +176,7 @@ export default defineComponent({
   aspect-ratio: 16/9;
   flex-grow: 1;
   overflow: hidden;
+  grid-area: canvas;
 }
 header {
   display: flex;

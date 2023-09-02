@@ -1,8 +1,9 @@
 <template>
   <div class="wrapper">
     <EditorCanvas ref="veditorcanvas"></EditorCanvas>
-    <div id="editor-page">
-      <Card>
+
+    <div id="editor-topbar">
+      <div class="topbar">
         <button
           class="button-with-icon"
           @click="saveBase64AsFile(veditorcanvas!.getImageURI(), 'slajd.png')"
@@ -23,15 +24,18 @@
             <IconImage /> Dodaj zdjęcie
           </button>
         </div>
-      </Card>
-
+      </div>
+    </div>
+    
+    <div id="editor-page">
+      
       <FontInput
-        v-if="editorStore.selectedElement"
+        v-if="editorStore.selectedElement?.type == 'text'"
         :title="'Czcionka'"
         v-model="editorStore.selectedElement.font"
       ></FontInput>
       <FontInput
-        v-else
+        v-else-if="editorStore.selectedElement?.type != 'image'"
         :title="'Domyślna czcionka'"
         v-model="editorStore.defaultFont"
       ></FontInput>
@@ -181,12 +185,28 @@ export default defineComponent({
 } */
 
 .wrapper {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  grid-template-areas: 
+    "topbar topbar"
+    "canvas sidebar";
+}
+
+#editor-topbar {
+  grid-area: topbar;
+}
+
+.topbar {
+  background-color: var(--app-foreground-color);
+  padding: 1rem;
   display: flex;
 }
 
 #editor-page {
   margin: 4rem 4rem 0 0;
   font-size: 1.3rem;
+  grid-area: sidebar;
 }
 
 textarea {
