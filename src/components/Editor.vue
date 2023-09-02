@@ -1,13 +1,13 @@
 <template>
   <div class="wrapper">
-    <EditorCanvas ref="veditorcanvas" :model="editorStore.elements"></EditorCanvas>
+    <EditorCanvas ref="veditorcanvas" :model="editorStore.elements" :is-preview="false"></EditorCanvas>
 
     <div id="editor-topbar">
       <div class="topbar">
         <div class="section hr b">
           <button
             class="button-with-icon"
-            @click="saveBase64AsFile(veditorcanvas!.getImageURI(), 'slajd.png')"
+            @click="saveBase64AsFile(veditorcanvas!.getImageURI(), 'slajd.png'); console.log(editorStore.elements)"
           >
             <IconSave /> Zapisz zdjęcie
           </button>
@@ -36,24 +36,15 @@
           Cudzysłów
         </ButtonCheckbox>
         <div class="section hr bl">
-          <button class="button-with-icon">Załaduj template</button>
+          <button class="button-with-icon" @click="templateModalIsOpen=true"><IconUpload/>Załaduj template</button>
+          <button class="button-with-icon" @click="saveURIAsFile(stringToSRC(JSON.stringify(editorStore.saveableElements), 'text/json'), 'template.json')"><IconDownload/>Zapisz na dysk</button>
         </div>
+        <TemplateLoaderModal :is-open="templateModalIsOpen" @update:is-open="v=>templateModalIsOpen=v"></TemplateLoaderModal>
         
       </div>
     </div>
 
     <div id="editor-page">
-      <!-- <FontInput
-        v-if="editorStore.selectedElement?.type == 'text'"
-        :title="'Czcionka'"
-        v-model="editorStore.selectedElement.font"
-      ></FontInput>
-      <FontInput
-        v-else-if="editorStore.selectedElement?.type != 'image'"
-        :title="'Domyślna czcionka'"
-        v-model="editorStore.defaultFont"
-      ></FontInput> -->
-
       <Card v-if="editorStore.selectedElementID != -1">
         <div class="section" v-if="editorStore.selectedElement?.type == 'text'">
           <h4>Tekst</h4>
@@ -108,14 +99,10 @@
 
 <script setup lang="ts">
 import EditorCanvas from "./EditorCanvas.vue"
-import FontInput from "@/components/input/FontInput.vue"
 import { useEditorStore } from "@/stores/editor"
 import { defineComponent, nextTick, ref, type Ref } from "vue"
 import Card from "./Card.vue"
 import CSSSizeInput from "./input/CSSSizeInput.vue"
-import ImagePicker from "./input/ImagePicker.vue"
-import IconQuotes from "@/components/icons/IconQuotes.vue"
-import Modal from "@/components/Modal.vue"
 import ImagePickerModal from "./modals/ImagePickerModal.vue"
 import IconSave from "./icons/IconSave.vue"
 import IconType from "./icons/IconType.vue"
@@ -123,6 +110,9 @@ import IconImage from "./icons/IconImage.vue"
 import { images } from "@/scripts/images"
 import InlineFontInput from "@/components/input/InlineFontInput.vue"
 import ButtonCheckbox from "./input/ButtonCheckbox.vue"
+import TemplateLoaderModal from "./modals/TemplateLoaderModal.vue"
+import IconDownload from "@/components/icons/IconDownload.vue"
+import IconUpload from "@/components/icons/IconUpload.vue"
 
 const veditorcanvas = ref<InstanceType<typeof EditorCanvas> | null>(null)
 const vimagepickermodal = ref<InstanceType<typeof ImagePickerModal> | null>(
@@ -137,7 +127,9 @@ export default defineComponent({
   expose: ["getCanvas"],
   data() {
     return {
-      imageModalIsOpen: false
+      imageModalIsOpen: false,
+      templateModalIsOpen: false,
+      Promise: Promise
     }
   },
   methods: {
@@ -152,8 +144,22 @@ export default defineComponent({
     fileToSRC(file: File) {
       return URL.createObjectURL(file)
     },
+    stringToSRC(str: string, mime: string) {
+      const file = new Blob([str], {type: mime})
+      return URL.createObjectURL(file)
+    },
+    saveURIAsFile(URI: string, fileName: string) {
+      const link = document.createElement("a")
+      link.id = "janky-download-link"
+      document.body.appendChild(link) // for Firefox
+      
+      link.setAttribute("href", URI)
+      link.setAttribute("download", fileName)
+      link.click()
+      document.getElementById("janky-download-link")?.remove()
+    },
     async saveBase64AsFile(base64: Promise<string>, fileName: string) {
-      var link = document.createElement("a")
+      const link = document.createElement("a")
       link.id = "janky-download-link"
       document.body.appendChild(link) // for Firefox
 

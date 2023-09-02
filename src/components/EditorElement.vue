@@ -7,7 +7,7 @@
       :style="model.type != 'image' ? stylingCSS : {lineHeight: '0'}"
     >
       <p
-        :style="`color: ${thisElement().font.color}`"
+        :style="`color: ${model.font.color}`"
         v-if="model.type == 'text'"
       >
         {{ model.fancyquotes ? "„" : "" }}{{ model.value
@@ -46,7 +46,12 @@ export default defineComponent({
     model: {
       type: Object as PropType<ElementModel>,
       required: true
-    }
+    },
+    scale: {
+      type: Number,
+      required: true
+    },
+    shouldBind: {type: Boolean, required: true}
   },
 
   setup() {
@@ -54,16 +59,19 @@ export default defineComponent({
     return { editorStore: editorStore }
   },
   mounted() {
-    this.editorStore.getElementModel(this.model.id).rect = () =>
-      (this.$refs.outer as HTMLDivElement).getBoundingClientRect()
+    if (this.shouldBind) {
+      this.model.rect = (() =>
+      (this.$refs.outer as HTMLDivElement).getBoundingClientRect()).bind(this)
+      console.log(this.$refs, this.model.rect)
+    }
   },
   methods: {
     setActiveComponent() {
       this.editorStore.selectedElementID = this.$props.model.id
     },
-    thisElement() {
-      return this.editorStore.elements.get(this.model.id)!
-    },
+    // model {
+    //   return this.editorStore.elements.get(this.model.id)!
+    // },
     deleteElement() {
       this.editorStore.deleteElement(this.model.id)
     }
@@ -75,23 +83,23 @@ export default defineComponent({
 
     positionCss() {
       return {
-        left: `calc(${this.thisElement().position.x * 100}%)`,
-        top: `calc(${this.thisElement().position.y * 100}%)`
+        left: `calc(${this.model.position.x * 100}%)`,
+        top: `calc(${this.model.position.y * 100}%)`
       }
     },
     stylingCSS() {
       return {
-        padding: `${this.thisElement().padding.string}`,
-        width: `${this.thisElement().width.string}`,
-        height: `${this.thisElement().height.string}`,
+        padding: `calc(${this.model.padding.string}*${this.scale})`,
+        width: `calc(${this.model.width.string}*${this.scale})`,
+        height: `calc(${this.model.height.string}*${this.scale})`,
         fontSize: 
-          !this.thisElement().font.is_auto
-            ? `calc(${this.thisElement().font?.size.string}*${this.editorStore.canvasRect.width/1920})`
-            : `calc(var(--font-size)*${this.editorStore.canvasRect.width/1920})`
+          !this.model.font.is_auto
+            ? `calc(${this.model.font?.size.string}*${this.scale})`
+            : `calc(var(--font-size)*${this.scale})`
         ,
         fontFamily: `${
-          !this.thisElement().font.is_auto
-            ? this.thisElement().font?.family
+          !this.model.font.is_auto
+            ? this.model.font?.family
             : "inherit"
         }`,
         boxSizing: "content-box" as const
@@ -108,8 +116,8 @@ p {
 }
 
 img {
-  min-height: 4rem;
-  min-width: 4rem;
+  min-height: calc(4rem*v-bind(scale));
+  min-width: calc(4rem*v-bind(scale));
   width: 100%;
 }
 

@@ -35,8 +35,11 @@ h1 {
 }
 
 main {
-  max-height: 40rem;
+  max-height: 60vh;
   overflow-y: scroll;
+  border-bottom: 2px solid var(--app-divider-color);
+  height: 100%;
+  padding-bottom: 1rem;
 }
 header {
   display: flex;
@@ -59,10 +62,10 @@ header {
 .wrapper {
   border-radius: var(--app-border-radius);
   width: 80%;
-  min-height: 50rem;
   background-color: var(--app-foreground-color);
   margin: 2rem auto auto auto;
   z-index: 1001;
+  overflow: hidden;
 }
 .background {
   display: flex;

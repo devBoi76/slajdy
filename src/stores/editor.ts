@@ -1,6 +1,7 @@
 import { ref, computed, type Ref } from "vue"
 import { defineStore } from "pinia"
 import { pageCoordToCanvas } from "@/scripts/utility"
+import { images } from "@/scripts/images"
 
 export const useCounterStore = defineStore("counter", () => {
   const count = ref(0)
@@ -65,16 +66,21 @@ export class Vec2 {
 
 export interface ElementModel {
   id: number
-  fancyquotes: boolean,
+  UID: number
+  fancyquotes: boolean
   type: ElementType
   value: string
   position: Vec2
-  rect: () => DOMRect
+  rect:(() => DOMRect | null)
   padding: Size
   width: Size
   height: Size
   dragged: boolean
   font: FontOption
+}
+
+export function UID(el: ElementModel): string {
+  return `${el.id}_${el.UID}`
 }
 
 export enum Orientation {
@@ -129,10 +135,19 @@ export const useEditorStore = defineStore("editor", {
   getters: {
     selectedElement() : ElementModel | undefined {
       return this.elements.get(this.selectedElementID);
+    },
+    saveableElements(): Array<ElementModel> {
+      return Array.from(this.elements.values())
     }
   },
 
   actions: {
+    setTemplate(t: TemplateT) {
+      this.elements = t.map
+      this.nextID = t.nextID
+      this.selectedElementID = -1
+      this.draggedElementID = -1
+    },
     deleteElement(id: number) {
       if (this.draggedElementID == id) this.setDragged(-1)
       if (this.selectedElementID == id) this.selectedElementID = -1
@@ -142,6 +157,7 @@ export const useEditorStore = defineStore("editor", {
     addElement(type: ElementType) {
       this.elements.set(this.nextID, {
         id: this.nextID,
+        UID: 0,
         fancyquotes: type == "text" ? true : false,
         position: new Vec2(0.05, 0.05),
         rect: () => new DOMRect(),
@@ -205,23 +221,23 @@ export const useEditorStore = defineStore("editor", {
 
       for (const [id, el] of this.elements) {
         this.hDragGuides.push(new DragGuide(pageCoordToCanvas(
-          el.rect().left,
+          el.rect()?.left || 0,
           this.canvasRect.left,
           this.canvasRect.right
         ), DragGuideSource.Element, Orientation.Horizontal, el.id))
         this.hDragGuides.push(new DragGuide(pageCoordToCanvas(
-          el.rect().right,
+          el.rect()?.right || 0,
           this.canvasRect.left,
           this.canvasRect.right
         ), DragGuideSource.Element, Orientation.Horizontal, el.id))
 
         this.vDragGuides.push(new DragGuide(pageCoordToCanvas(
-          el.rect().top,
+          el.rect()?.top || 0,
           this.canvasRect.top,
           this.canvasRect.bottom
         ), DragGuideSource.Element, Orientation.Vertical, el.id))
         this.vDragGuides.push(new DragGuide(pageCoordToCanvas(
-          el.rect().bottom,
+          el.rect()?.bottom || 0,
           this.canvasRect.top,
           this.canvasRect.bottom
         ), DragGuideSource.Element, Orientation.Vertical, el.id))
@@ -234,6 +250,7 @@ function defaultElements(): Map<number, ElementModel> {
   const map = new Map<number, ElementModel>()
   map.set(0, {
     id: 0,
+    UID: 0,
     type: "text",
     fancyquotes: true,
     value: "Wybierz aby edytować...",
@@ -242,8 +259,89 @@ function defaultElements(): Map<number, ElementModel> {
     width: new Size(0, "auto"),
     height: new Size(0, "auto"),
     position: new Vec2(0.05, 0.05),
-    rect: () => new DOMRect(),
+    rect: () => null,
     font: new FontOption()
     })
   return map
 }
+
+export type TemplateT = {map: Map<number, ElementModel>, nextID: number}
+
+function loadTemplateFromArray(validTemplate: ElementModel[], templateID: number): TemplateT {
+  const map = new Map<number, ElementModel>()
+  
+  for (const el of validTemplate) {
+    el.UID = Date.now()
+    map.set(el.id, structuredClone(el))
+  }
+  return {map: map, nextID: validTemplate.length}
+}
+
+function defaultTemplate(templateID: number): TemplateT{
+  const map = new Map<number, ElementModel>()
+  map.set(0, {
+    id: 0,
+    UID: templateID,
+    type: "text",
+    fancyquotes: true,
+    value: "Wybierz aby edytować...",
+    dragged: false,
+    padding: new Size(0.25, "rem"),
+    width: new Size(0, "auto"),
+    height: new Size(0, "auto"),
+    position: new Vec2(0, 0),
+    rect: () => null,
+    font: new FontOption()
+    })
+  map.set(1, {
+    id: 1,
+    UID: templateID,
+    type: "text",
+    fancyquotes: false,
+    value: "Wybierz aby edytować...",
+    dragged: false,
+    padding: new Size(0.25, "rem"),
+    width: new Size(0, "auto"),
+    height: new Size(0, "auto"),
+    position: new Vec2(0, 0.0666),
+    rect: () => null,
+    font: new FontOption()
+    })
+
+  map.get(1)!.font.size = new Size(25, "pt")
+  map.get(1)!.font.is_auto = false
+  map.get(1)!.font.color = "#656565"
+
+  map.set(2, {
+    id: 2,
+    UID: templateID,
+    type: "image",
+    fancyquotes: true,
+    value: images[0],
+    dragged: false,
+    padding: new Size(0.25, "rem"),
+    width: new Size(4.5, "rem"),
+    height: new Size(0, "auto"),
+    position: new Vec2(0.93, 0),
+    rect: () => null,
+    font: new FontOption()
+    })
+
+  return {map: map, nextID: 3}
+}
+
+const template1 = [{"id":0,"UID":0,"type":"text","fancyquotes":true,"value":"Wybierz aby edytować...","dragged":false,"padding":{"_v":0.25,"type":"rem"},"width":{"_v":0,"type":"auto"},"height":{"_v":0,"type":"auto"},"position":{"x":0.05,"y":0.05},"font":{"family":"Times","size":{"_v":32,"type":"pt"},"is_auto":true,"color":"#000000"}}] as ElementModel[]
+const templatate_definitions = [template1] as const
+
+function buildTemplatesFromArr(ts: typeof templatate_definitions): TemplateFN[] {
+  let ready = [] as TemplateFN[]
+  for (let i = 0; i < ts.length; i++) {
+    const t = ts[i]
+    ready.push((TID: number) => {return loadTemplateFromArray(t, TID)})
+  }
+  return ready
+}
+
+type TemplateFN = (TID: number) => TemplateT
+
+export const templates: TemplateFN[] = [...buildTemplatesFromArr(templatate_definitions), defaultTemplate] as const

@@ -13,14 +13,16 @@ const editorStore = useEditorStore()
       @click="editorStore.selectedElementID = -1"
     >
       <canvas
-        :width="editorStore.canvasRect.width"
-        :height="editorStore.canvasRect.height"
+        :width="canvasRect()?.width"
+        :height="canvasRect()?.height"
         id="editor-canvas"
       ></canvas>
       <EditorElement
         v-for="[id, el] in model"
         :model="el"
-        :key="id"
+        :scale="scale"
+        :should-bind="!isPreview"
+        :key="UID(el)"
       />
     </div>
   </div>
@@ -30,14 +32,20 @@ const editorStore = useEditorStore()
 import { defineComponent, ref, watch } from "vue"
 import { toPng } from "html-to-image"
 
-
-import { useEditorStore, DragGuideSource, Orientation, type ElementModel } from "@/stores/editor"
+import {
+  useEditorStore,
+  DragGuideSource,
+  Orientation,
+  type ElementModel,
+  UID
+} from "@/stores/editor"
 import EditorElement from "@/components/EditorElement.vue"
 
 export default defineComponent({
   expose: ["drawDragLines", "getImageURI"],
   props: {
-    model: {type: Map<number, ElementModel>, required: true}
+    isPreview: { type: Boolean, required: true },
+    model: { type: Map<number, ElementModel>, required: true }
   },
   setup() {
     const editorStore = useEditorStore()
@@ -46,23 +54,38 @@ export default defineComponent({
 
     return { editorStore: editorStore, vcanvasfield }
   },
+  data() {
+    return {
+      scale: 1,
+      UID: UID
+    }
+  },
   mounted() {
+    this.scale = (this.canvasRect()?.width || 1920) / 1920
+    console.log(this.scale)
+
+    if (this.isPreview) {
+      return
+    }
+    const obs = new ResizeObserver(() => {
+      this.editorStore.canvasRect = this.canvasRect()!
+      this.scale = this.canvasRect()!.width / 1920
+      console.log(this.scale)
+    })
+    obs.observe(document.getElementById("canvas")!)
     this.editorStore.canvasRect = document
       .getElementById("editor-canvas")!
       .getBoundingClientRect()
-
-    const obs = new ResizeObserver(() => {
-      this.editorStore.canvasRect = document
-        .getElementById("canvas")!
-        .getBoundingClientRect()
-    })
-
-    obs.observe(document.getElementById("canvas")!)
   },
   methods: {
-    async getImageURI() : Promise<string> {
+    async getImageURI(): Promise<string> {
       this.vcanvasfield?.style
-      const promise = toPng(document.getElementById("canvas")!, {pixelRatio: 1920/this.canvasRect!.width})
+      console.log(1920 / this.canvasRect()!.width)
+      console.log(this.canvasRect()?.width)
+      const promise = toPng(document.getElementById("canvas")!, {
+        canvasHeight: 1080,
+        canvasWidth: 1920
+      })
 
       return promise
     },
@@ -133,6 +156,9 @@ export default defineComponent({
           painter.stroke()
         }
       }
+    },
+    canvasRect() {
+      return this.vcanvasfield?.getBoundingClientRect()
     }
   },
   computed: {
@@ -144,7 +170,7 @@ export default defineComponent({
           this.editorStore.defaultFont.size.v +
           this.editorStore.defaultFont.size.type
       }
-    },
+    }
     // canvasCss() {
     //   return {
     //     width: `${Math.floor(
@@ -155,9 +181,6 @@ export default defineComponent({
     //     )}px`
     //   }
     // },
-    canvasRect() {
-      return document.getElementById("canvas")?.getBoundingClientRect()
-    }
   },
   components: { EditorElement }
 })
@@ -166,7 +189,7 @@ export default defineComponent({
 <style scoped>
 #canvas {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1920/1080;
   background: var(--bgcolor);
   font-size: var(--font-size);
   font-family: var(--font-family);
