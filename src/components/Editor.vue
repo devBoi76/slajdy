@@ -4,13 +4,14 @@
 
     <div id="editor-topbar">
       <div class="topbar">
-        <button
-          class="button-with-icon"
-          @click="saveBase64AsFile(veditorcanvas!.getImageURI(), 'slajd.png')"
-        >
-          <IconSave /> Zapisz zdjęcie
-        </button>
-        <div class="section">
+        <div class="section hr b">
+          <button
+            class="button-with-icon"
+            @click="saveBase64AsFile(veditorcanvas!.getImageURI(), 'slajd.png')"
+          >
+            <IconSave /> Zapisz zdjęcie
+          </button>
+
           <button
             class="button-with-icon"
             @click="editorStore.addElement(`text`)"
@@ -24,12 +25,28 @@
             <IconImage /> Dodaj zdjęcie
           </button>
         </div>
+
+        <InlineFontInput v-if="editorStore.selectedElement?.type == 'text'"
+        :title="'Czcionka'"
+        v-model="editorStore.selectedElement.font"></InlineFontInput>
+        <InlineFontInput v-else-if="editorStore.selectedElement?.type != 'image'"
+        :title="'Domyślna czcionka'"
+        v-model="editorStore.defaultFont"></InlineFontInput>
+        <!-- <label v-if="editorStore.selectedElement"> -->
+          <ButtonCheckbox v-if="editorStore.selectedElement" v-model="editorStore.selectedElement.fancyquotes">
+              Cudzysłów
+          </ButtonCheckbox>
+          <!-- <input
+                id="fancyquotes-check"
+                type="checkbox"
+                v-model="editorStore.selectedElement.fancyquotes"
+              />
+        </label> -->
       </div>
     </div>
-    
+
     <div id="editor-page">
-      
-      <FontInput
+      <!-- <FontInput
         v-if="editorStore.selectedElement?.type == 'text'"
         :title="'Czcionka'"
         v-model="editorStore.selectedElement.font"
@@ -38,21 +55,13 @@
         v-else-if="editorStore.selectedElement?.type != 'image'"
         :title="'Domyślna czcionka'"
         v-model="editorStore.defaultFont"
-      ></FontInput>
+      ></FontInput> -->
 
       <Card v-if="editorStore.selectedElementID != -1">
         <div class="section" v-if="editorStore.selectedElement?.type == 'text'">
           <h4>Tekst</h4>
           <textarea v-model="editorStore.selectedElement!.value"></textarea>
           <hr />
-          <label>
-            Cudzysłów:
-            <input
-              id="fancyquotes-check"
-              type="checkbox"
-              v-model="editorStore.selectedElement.fancyquotes"
-            />
-          </label>
           <hr />
         </div>
         <div
@@ -111,7 +120,9 @@ import ImagePickerModal from "./modals/ImagePickerModal.vue"
 import IconSave from "./icons/IconSave.vue"
 import IconType from "./icons/IconType.vue"
 import IconImage from "./icons/IconImage.vue"
-import {images} from "@/scripts/images"
+import { images } from "@/scripts/images"
+import InlineFontInput from "@/components/input/InlineFontInput.vue"
+import ButtonCheckbox from "./input/ButtonCheckbox.vue"
 
 const veditorcanvas = ref<InstanceType<typeof EditorCanvas> | null>(null)
 const vimagepickermodal = ref<InstanceType<typeof ImagePickerModal> | null>(
@@ -165,14 +176,21 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style>
 .button-with-icon {
   display: inline-flex;
-  align-items: center;
+  /* align-items: center; */
+  font-size: 1rem;
   justify-content: space-between;
-  margin-block: 0.15rem;
-  /* border-radius: 0.25rem; */
+  margin-inline: 0.15rem;
   gap: 0.25rem;
+}
+</style>
+
+<style scoped>
+.section.hr.b {
+  border-right: 1px solid var(--app-divider-color);
+  padding-right: 0.75rem;
 }
 
 /* .button-with-icon:first-of-type {
@@ -188,7 +206,7 @@ export default defineComponent({
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: auto auto;
-  grid-template-areas: 
+  grid-template-areas:
     "topbar topbar"
     "canvas sidebar";
 }
@@ -201,6 +219,8 @@ export default defineComponent({
   background-color: var(--app-foreground-color);
   padding: 1rem;
   display: flex;
+  align-items: end;
+  gap: 0.75rem;
 }
 
 #editor-page {
@@ -219,7 +239,4 @@ label > * {
   margin-left: 0.25rem;
 }
 
-button {
-  margin-right: 0.5rem;
-}
 </style>

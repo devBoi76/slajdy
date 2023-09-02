@@ -97,8 +97,10 @@ export default defineComponent({
   border-radius: var(--app-border-radius);
   padding: 0.25rem;
   font-size: 1rem;
+  height: 2rem;
   position: relative;
   user-select: none;
+  min-width: 12rem;
 }
 .showcase.active {
   border-bottom-left-radius: 0;
@@ -127,12 +129,13 @@ export default defineComponent({
   content: "";
   float: left;
   height: 100%;
-  width: 7rem;
+  width: 4rem;
   background: linear-gradient(
     to right,
     transparent,
     var(--app-accent-color-light)
   );
+  opacity: 0.8;
   position: absolute;
   inset-block: 0;
   right: 0;

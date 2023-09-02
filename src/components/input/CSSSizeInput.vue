@@ -16,6 +16,7 @@
 <style scoped>
 input[type="number"] {
   width: 4rem;
+  height: 2rem;
   border-radius: var(--app-border-radius) 0 0 var(--app-border-radius);
   border: 2px solid var(--app-divider-color);
   border-right: none;
@@ -25,6 +26,7 @@ select {
   border-radius: 0 var(--app-border-radius) var(--app-border-radius) 0;
   border: 2px solid var(--app-divider-color);
   border-left: none;
+  height: 2rem;
 }
 </style>
 

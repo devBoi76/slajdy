@@ -4,7 +4,7 @@ body {
   background-color: var(--app-background-color);
 }
 
-.section:not(:first-of-type) {
+.section:not(:first-of-type):not(.hr) {
   margin-top: 0.5rem;
 }
 
