@@ -4,33 +4,81 @@
       class="outer"
       @click.stop="setActiveComponent"
       :class="{ active: isActive }"
-      :style="model.type != 'image' ? stylingCSS() : {lineHeight: '0'}"
+      :style="model.type != 'image' ? stylingCSS() : { lineHeight: '0' }"
     >
-      <p
-        :style="`color: ${model.font.is_auto ? 'var(--font-color)' : model.font.color}`"
-        v-if="model.type == 'text'"
-      >
-        {{ model.fancyquotes ? "„" : "" }}{{ model.value
-        }}{{ model.fancyquotes ? "”" : "" }}
-      </p>
-      <img v-else-if="model.type == 'image'" :src="model.value" :style="stylingCSS"/>
+      <div v-if="model.type == 'text'">
+        {{ model.fancyquotes ? "„" : "" }}
+        <p
+          :style="`color: ${
+            model.font.is_auto ? 'var(--font-color)' : model.font.color
+          }`"
+    
+          @dblclick="
+            console.log($event.target)
+            ;($event.target as HTMLParagraphElement).contentEditable = 'true'
+          "
+          @blur="
+            ($event.target as HTMLParagraphElement).contentEditable = 'false';
+            model.value = model.fancyquotes
+              ? ($event.target as HTMLParagraphElement)['innerText']
+              : ($event.target as HTMLParagraphElement)['innerText']
+          "
+        >
+        {{ model.value}}
+        </p>
+        {{ model.fancyquotes ? "”" : "" }}
+      </div>
+      <img
+        v-else-if="model.type == 'image'"
+        :src="model.value"
+        :style="stylingCSS"
+      />
       <p v-else>Unknown component type! `{{ model }}`</p>
 
       <div
         class="move-button"
         v-if="isActive"
-        @mousedown="editorStore.setDragged({sourceID: model.id, type: DraggedElementType.Move})"
+        @mousedown="
+          editorStore.setDragged({
+            sourceID: model.id,
+            type: DraggedElementType.Move
+          })
+        "
       >
-        <Lucide :name="'Move'"/>
+        <Lucide :name="'Move'" />
       </div>
 
       <div class="trash-button" v-if="isActive" @mousedown="deleteElement">
-        <Lucide :name="'Trash2'"/>
+        <Lucide :name="'Trash2'" />
       </div>
-      <div class="expander-both" @mousedown="editorStore.setDragged({sourceID: model.id, type: DraggedElementType.ExpandXY})"></div>
+      <div
+        class="expander-both"
+        @mousedown="
+          editorStore.setDragged({
+            sourceID: model.id,
+            type: DraggedElementType.ExpandXY
+          })
+        "
+      ></div>
 
-      <div class="expander-bottom" @mousedown="editorStore.setDragged({sourceID: model.id, type: DraggedElementType.ExpandY})"></div>
-      <div class="expander-right" @mousedown="editorStore.setDragged({sourceID: model.id, type: DraggedElementType.ExpandX})"></div>
+      <div
+        class="expander-bottom"
+        @mousedown="
+          editorStore.setDragged({
+            sourceID: model.id,
+            type: DraggedElementType.ExpandY
+          })
+        "
+      ></div>
+      <div
+        class="expander-right"
+        @mousedown="
+          editorStore.setDragged({
+            sourceID: model.id,
+            type: DraggedElementType.ExpandX
+          })
+        "
+      ></div>
     </div>
   </div>
 </template>
@@ -38,82 +86,97 @@
 <script lang="ts">
 import { defineComponent, ref, type PropType } from "vue"
 
-import { useEditorStore, type ElementModel, Vec2, DraggedElementType } from "@/stores/editor"
+import {
+  useEditorStore,
+  type ElementModel,
+  Vec2,
+  DraggedElementType
+} from "@/stores/editor"
 import Lucide from "./icons/Lucide.vue"
 
 export default defineComponent({
-    name: "EditorElement",
-    expose: ["boundingRect"],
-    props: {
-        model: {
-            type: Object as PropType<ElementModel>,
-            required: true
-        },
-        scale: {
-            type: Number,
-            required: true
-        },
-        shouldBind: { type: Boolean, required: true }
+  name: "EditorElement",
+  expose: ["boundingRect"],
+  props: {
+    model: {
+      type: Object as PropType<ElementModel>,
+      required: true
     },
-    setup() {
-        const editorStore = useEditorStore();
-        return { editorStore: editorStore, DraggedElementType };
+    scale: {
+      type: Number,
+      required: true
     },
-    mounted() {
-        if (this.shouldBind) {
-            this.model.rect = (() => (this.$refs.outer as HTMLDivElement).getBoundingClientRect()).bind(this);
-            console.log(this.$refs, this.model.rect);
-        }
+    shouldBind: { type: Boolean, required: true }
+  },
+  setup() {
+    const editorStore = useEditorStore()
+    return { editorStore: editorStore, DraggedElementType }
+  },
+  mounted() {
+    if (this.shouldBind) {
+      this.model.rect = (() =>
+        (this.$refs.outer as HTMLDivElement).getBoundingClientRect()).bind(this)
+      console.log(this.$refs, this.model.rect)
+    }
+  },
+  methods: {
+    setActiveComponent() {
+      this.editorStore.selectedElementID = this.$props.model.id
     },
-    methods: {
-        setActiveComponent() {
-            this.editorStore.selectedElementID = this.$props.model.id;
-        },
-        // model {
-        //   return this.editorStore.elements.get(this.model.id)!
-        // },
-        deleteElement() {
-            this.editorStore.deleteElement(this.model.id);
-        },
-        stylingCSS() {
-          console.log(this.model,{
-                padding: `calc(${this.model.padding.string}*${this.model.padding.scales ? this.scale : 1})`,
-                fontSize: !this.model.font.is_auto
-                    ? `calc(${this.model.font.size.string}*${this.scale})`
-                    : `calc(var(--font-size)*${this.scale})`,
-                fontFamily: `${!this.model.font.is_auto
-                    ? this.model.font?.family
-                    : "inherit"}`,
-                fontStyle: this.model.italic ? "italic" : "normal",
-                fontWeight: this.model.bold ? "bold" : "normal",
-            })
-            return {
-                padding: `calc(${this.model.padding.string}*${this.model.padding.scales ? this.scale : 1})`,
-                fontSize: !this.model.font.is_auto
-                    ? `calc(${this.model.font.size.string}*${this.scale})`
-                    : `calc(var(--font-size)*${this.scale})`,
-                fontFamily: `${!this.model.font.is_auto
-                    ? this.model.font?.family
-                    : "inherit"}`,
-                fontStyle: this.model.italic ? "italic" : "normal",
-                fontWeight: this.model.bold ? "bold" : "normal",
-            };
-        }
+    // model {
+    //   return this.editorStore.elements.get(this.model.id)!
+    // },
+    deleteElement() {
+      this.editorStore.deleteElement(this.model.id)
     },
-    computed: {
-        isActive() {
-            return this.editorStore.selectedElementID == this.$props.model.id;
-        },
-        positionCss() {
-            return {
-                left: `calc(${this.model.position.x * 100}%)`,
-                top: `calc(${this.model.position.y * 100}%)`,
-                width: `calc(${this.model.width.string}*${this.model.width.scales ? this.scale : 1})`,
-                height: `calc(${this.model.height.string}*${this.model.height.scales ? this.scale : 1})`,
-            };
-        },
+    stylingCSS() {
+      console.log(this.model, {
+        padding: `calc(${this.model.padding.string}*${
+          this.model.padding.scales ? this.scale : 1
+        })`,
+        fontSize: !this.model.font.is_auto
+          ? `calc(${this.model.font.size.string}*${this.scale})`
+          : `calc(var(--font-size)*${this.scale})`,
+        fontFamily: `${
+          !this.model.font.is_auto ? this.model.font?.family : "inherit"
+        }`,
+        fontStyle: this.model.italic ? "italic" : "normal",
+        fontWeight: this.model.bold ? "bold" : "normal"
+      })
+      return {
+        padding: `calc(${this.model.padding.string}*${
+          this.model.padding.scales ? this.scale : 1
+        })`,
+        fontSize: !this.model.font.is_auto
+          ? `calc(${this.model.font.size.string}*${this.scale})`
+          : `calc(var(--font-size)*${this.scale})`,
+        fontFamily: `${
+          !this.model.font.is_auto ? this.model.font?.family : "inherit"
+        }`,
+        fontStyle: this.model.italic ? "italic" : "normal",
+        fontWeight: this.model.bold ? "bold" : "normal"
+      }
+    }
+  },
+  computed: {
+    isActive() {
+      return this.editorStore.selectedElementID == this.$props.model.id
     },
-    components: { Lucide }
+    positionCss() {
+      return {
+        left: `calc(${this.model.position.x * 100}%)`,
+        top: `calc(${this.model.position.y * 100}%)`,
+        width: `calc(${this.model.width.string}*${
+          this.model.width.scales ? this.scale : 1
+        })`,
+        height: `calc(${this.model.height.string}*${
+          this.model.height.scales ? this.scale : 1
+        })`
+      }
+    }
+  },
+  emits: ["element:focusEditor"],
+  components: { Lucide }
 })
 </script>
 
@@ -125,7 +188,7 @@ export default defineComponent({
   padding-right: 0.5rem;
   top: 0;
   bottom: var(--sz);
-  width: calc(var(--sz)/2);
+  width: calc(var(--sz) / 2);
 }
 .outer.active .expander-right:hover {
   cursor: e-resize;
@@ -140,7 +203,7 @@ export default defineComponent({
   left: 0;
   bottom: -0.5rem;
   padding-bottom: 0.5rem;
-  height: calc(var(--sz)/2);
+  height: calc(var(--sz) / 2);
 }
 .outer.active .expander-bottom:hover {
   cursor: s-resize;
@@ -168,6 +231,7 @@ export default defineComponent({
 }
 
 p {
+  display: inline;
   text-align: center;
   white-space: pre;
   font-style: inherit;
@@ -175,8 +239,8 @@ p {
 }
 
 img {
-  min-height: calc(4rem*v-bind(scale));
-  min-width: calc(4rem*v-bind(scale));
+  min-height: calc(4rem * v-bind(scale));
+  min-width: calc(4rem * v-bind(scale));
   width: 100%;
   height: 100%;
 }
@@ -229,6 +293,6 @@ img[src=""] {
 
 .active {
   outline: 2px dashed var(--app-accent-color);
-  user-select: none;
+  /* user-select: none; */
 }
 </style>

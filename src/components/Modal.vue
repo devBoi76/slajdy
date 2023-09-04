@@ -4,7 +4,7 @@
       <div class="wrapper">
             <header>
                 <h1>{{ title }}</h1>
-                <Lucide :name="'X'" @click="close()"/>
+                <Lucide class="close-x" :name="'X'" @click="close()"/>
             </header>
             <main>
               <slot>
@@ -18,12 +18,12 @@
 
 <style scoped>
 
-.feather-x:hover {
+.close-x:hover {
   color: red;
   cursor: pointer;
   transition: color 150ms;
 }
-.feather-x {
+.close-x {
   box-sizing: content-box;
   border-radius: 100%;
   padding: 0.5rem;
@@ -67,15 +67,17 @@ header {
   width: 80%;
   background-color: var(--app-foreground-color);
   margin: 2rem auto auto auto;
-  z-index: 1001;
+  z-index: 1002;
   overflow: hidden;
 }
 .background {
   display: flex;
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 1000;
+  background: rgba(0,0,0,.45);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  z-index: 1001;
 }
 /* .wrapper {
     position: absolute;

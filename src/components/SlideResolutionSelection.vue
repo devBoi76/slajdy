@@ -1,33 +1,38 @@
 <template>
     <div class="container">
         <div>
-            <MultiSelection :value="'light'" v-model="value">
-                <div class="icon-wrapper" :style="value == 'light' ? 'width: 6rem' : ''">
-                    <TwoColorIcon :foreground="'#3d3d3f'" :background="'#fff'"/>
+            <MultiSelection :value="'1080p'" v-model="value">
+                <div class="selection-wrapper" :style="value == '1080p' ? 'width: 7rem' : ''">
+                    1080p<br>
+                    (FullHD)
                 </div>
             </MultiSelection>
-            <MultiSelection :value="'reading'" v-model="value">
-                <div class="icon-wrapper" :style="value == 'reading' ? 'width: 6rem' : ''">
-                    <TwoColorIcon :foreground="'#14120d'" :background="'#f9f3ea'"/>
+            <MultiSelection :value="'1440p'" v-model="value">
+                <div class="selection-wrapper" :style="value == '1440p' ? 'width: 7rem' : ''">
+                    1440p<br>
+                    (QHD)
                 </div>
             </MultiSelection>
-            <MultiSelection :value="'dark'" v-model="value">
-                <div class="icon-wrapper" :style="value == 'dark' ? 'width: 6rem' : ''">
-                    <TwoColorIcon :foreground="'#edebe5'" :background="'#000'"/>
+            <MultiSelection :value="'2160p'" v-model="value">
+                <div class="selection-wrapper" :style="value == '2160p' ? 'width: 7rem' : ''">
+                    2160p<br>
+                    (4K UHD)
                 </div>
             </MultiSelection>
         </div>
-        <h1>Motyw</h1>
+        <h1>Rozdzielczość</h1>
     </div>
 </template>
 
 <style scoped>
-    .icon-wrapper {
-        width: 4rem;
-        transition: width 150ms;
-    }
-    .icon-wrapper:hover {
+    .selection-wrapper {
+        padding: 0.25rem;
         width: 5rem;
+        transition: width 150ms;
+        font-weight: bold;
+    }
+    .selection-wrapper:hover {
+        width: 6rem;
     }
     .container {
         display: flex;
@@ -40,14 +45,14 @@
 </style>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed,  } from 'vue';
 import MultiSelection from '@/components/input/MultiSelection.vue';
 import TwoColorIcon from '@/components/icons/TwoColorIcon.vue';
-import {type ColorThemes} from '@/stores/editor'
+import {type Resolutions} from '@/stores/editor'
 
 
 const props = defineProps<{
-    modelValue: ColorThemes
+    modelValue: Resolutions
 }>()
 
 const emit = defineEmits<{

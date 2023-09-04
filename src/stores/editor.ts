@@ -139,11 +139,15 @@ export type DraggedElement = {
 
 export type ColorThemes = "light" | "reading" | "dark"
 
+export type Resolutions = "1080p" | "1440p" | "2160p"
+
+
 export const useEditorStore = defineStore("editor", {
   state: () => {
     return {
       defaultFont: new FontOption(),
       colorTheme: "light" as ColorThemes,
+      slideResolution: "1080p" as Resolutions,
       canvasColors: {
         bg: "#ffffff"
       } as CanvasColors,
@@ -164,6 +168,13 @@ export const useEditorStore = defineStore("editor", {
     },
     saveableElements(): Array<ElementModel> {
       return Array.from(this.elements.values())
+    },
+    resolution(): {width: number, height: number} {
+      switch (this.slideResolution) {
+        case "1080p": return {width: 1920, height: 1080}
+        case "1440p": return {width: 2560, height: 1440}
+        case "2160p": return {width: 3840, height: 2160}
+      }
     }
   },
 

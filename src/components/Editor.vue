@@ -57,7 +57,7 @@
       <Card v-if="editorStore.selectedElementID != -1" class="l">
         <div class="section" v-if="editorStore.selectedElement?.type == 'text'">
           <h4>Tekst</h4>
-          <textarea v-model="editorStore.selectedElement!.value"></textarea>
+          <textarea ref='vtexteditortextarea' v-model="editorStore.selectedElement!.value"></textarea>
         </div>
         <div
           class="section"
@@ -82,8 +82,13 @@
           ></CSSSizeInput>
         </div>
       </Card>
-      <Card v-else class="l"> 
-        <ColorThemeSelection v-model="editorStore.colorTheme"/>
+      <Card v-else class="l">
+        <div class="section">
+          <ColorThemeSelection v-model="editorStore.colorTheme"/>
+        </div>
+        <div class="section">
+          <SlideResolutionSelection v-model="editorStore.slideResolution"/>
+        </div>
       </Card>
     </div>
   </div>
@@ -108,11 +113,13 @@ import TemplateLoaderModal from "./modals/TemplateLoaderModal.vue"
 import MultiSelection from "./input/MultiSelection.vue"
 import TwoColorIcon from "./icons/TwoColorIcon.vue"
 import ColorThemeSelection from "./ColorThemeSelection.vue"
+import SlideResolutionSelection from "./SlideResolutionSelection.vue"
 
 const veditorcanvas = ref<InstanceType<typeof EditorCanvas> | null>(null)
 const vimagepickermodal = ref<InstanceType<typeof ImagePickerModal> | null>(
   null
 )
+const vtexteditortextarea = ref<InstanceType<typeof HTMLTextAreaElement> | null>(null)
 
 const editorStore = useEditorStore()
 

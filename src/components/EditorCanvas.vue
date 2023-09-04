@@ -61,15 +61,20 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.scale = (this.canvasRect()?.width || 1920) / 1920
+    this.scale = (this.canvasRect()?.width || this.editorStore.resolution.width) / this.editorStore.resolution.width
     console.log(this.scale)
 
     if (this.isPreview) {
       return
     }
+    
+    watch(() => this.editorStore.resolution, (v) => {
+      this.scale = this.canvasRect()!.width / v.width
+    })
+
     const obs = new ResizeObserver(() => {
       this.editorStore.canvasRect = this.canvasRect()!
-      this.scale = this.canvasRect()!.width / 1920
+      this.scale = this.canvasRect()!.width / this.editorStore.resolution.width
       console.log(this.scale)
     })
     obs.observe(document.getElementById("canvas")!)
@@ -80,11 +85,10 @@ export default defineComponent({
   methods: {
     async getImageURI(): Promise<string> {
       this.vcanvasfield?.style
-      console.log(1920 / this.canvasRect()!.width)
       console.log(this.canvasRect()?.width)
       const promise = toPng(document.getElementById("canvas")!, {
-        canvasHeight: 1080,
-        canvasWidth: 1920
+        canvasHeight: this.editorStore.resolution.height,
+        canvasWidth: this.editorStore.resolution.width
       })
 
       return promise
