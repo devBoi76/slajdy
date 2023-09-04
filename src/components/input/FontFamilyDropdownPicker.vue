@@ -124,6 +124,7 @@ export default defineComponent({
 .option {
   padding: 0.25rem;
   position: relative;
+  cursor: pointer;
 }
 .option.active::after {
   content: "";
