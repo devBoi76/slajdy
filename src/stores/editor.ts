@@ -16,12 +16,12 @@ export const useCounterStore = defineStore("counter", () => {
 export const font_size_type = ["pt", "%", "rem", "auto"] as const
 export type SizeType = (typeof font_size_type)[number]
 
-type ArraySize = {_v: number, type: SizeType}
+type ArraySize = { _v: number; type: SizeType }
 
 export class Size {
   constructor(v: number, type: SizeType) {
-      this._v = v
-      this.type = type
+    this._v = v
+    this.type = type
   }
 
   static from_array(v: ArraySize): Size {
@@ -35,7 +35,7 @@ export class Size {
   set v(v: number) {
     this._v = v
   }
-  get string() : string {
+  get string(): string {
     console.log(this.v, this.type)
     if (this.type != "auto") return `${this.v}${this.type}`
     else return `auto`
@@ -78,7 +78,7 @@ export class Vec2 {
 
 export type ElementModel = {
   id: number
-  UID: number
+  UID: string
   fancyquotes: boolean
   bold: boolean
   italic: boolean
@@ -188,7 +188,7 @@ export const useEditorStore = defineStore("editor", {
     addElement(type: ElementType) {
       this.elements.set(this.nextID, {
         id: this.nextID,
-        UID: 0,
+        UID: "",
         fancyquotes: type == "text" ? true : false,
         bold: false,
         italic: false,
@@ -318,7 +318,7 @@ function defaultElements(): Map<number, ElementModel> {
   const map = new Map<number, ElementModel>()
   map.set(0, {
     id: 0,
-    UID: 0,
+    UID: "",
     type: "text",
     fancyquotes: true,
     bold: false,
@@ -346,7 +346,7 @@ function loadTemplateFromArray(
   const tid = Date.now()
 
   for (const el of validTemplate) {
-    el.UID = tid + el.id
+    el.UID = `${tid}_${el.id}_${templateID}`
     const clone = structuredClone(el)
     clone.padding = Size.from_array(clone.padding as ArraySize)
     clone.font.size = Size.from_array(clone.font.size as ArraySize)
@@ -358,133 +358,196 @@ function loadTemplateFromArray(
   return { map: map, nextID: validTemplate.length }
 }
 
-function defaultTemplate(templateID: number): TemplateT {
-  const map = new Map<number, ElementModel>()
-  map.set(0, {
-    id: 0,
-    UID: templateID,
-    type: "text",
-    fancyquotes: true,
-    bold: false,
-    italic: false,
-    value: "Wybierz aby edytować...",
-    dragged: false,
-    padding: new Size(0.25, "rem"),
-    width: new Size(0, "auto"),
-    height: new Size(0, "auto"),
-    position: new Vec2(0, 0),
-    rect: () => null,
-    font: new FontOption()
-  })
-  map.set(1, {
-    id: 1,
-    UID: templateID,
-    type: "text",
-    fancyquotes: false,
-    bold: false,
-    italic: false,
-    value: "Wybierz aby edytować...",
-    dragged: false,
-    padding: new Size(0.25, "rem"),
-    width: new Size(0, "auto"),
-    height: new Size(0, "auto"),
-    position: new Vec2(0, 0.0666),
-    rect: () => null,
-    font: new FontOption()
-  })
+// function defaultTemplate(templateID: number): TemplateT {
+//   const map = new Map<number, ElementModel>()
+//   map.set(0, {
+//     id: 0,
+//     UID: templateID,
+//     type: "text",
+//     fancyquotes: true,
+//     bold: false,
+//     italic: false,
+//     value: "Wybierz aby edytować...",
+//     dragged: false,
+//     padding: new Size(0.25, "rem"),
+//     width: new Size(0, "auto"),
+//     height: new Size(0, "auto"),
+//     position: new Vec2(0, 0),
+//     rect: () => null,
+//     font: new FontOption()
+//   })
+//   map.set(1, {
+//     id: 1,
+//     UID: templateID,
+//     type: "text",
+//     fancyquotes: false,
+//     bold: false,
+//     italic: false,
+//     value: "Wybierz aby edytować...",
+//     dragged: false,
+//     padding: new Size(0.25, "rem"),
+//     width: new Size(0, "auto"),
+//     height: new Size(0, "auto"),
+//     position: new Vec2(0, 0.0666),
+//     rect: () => null,
+//     font: new FontOption()
+//   })
 
-  map.get(1)!.font.size = new Size(25, "pt")
-  map.get(1)!.font.is_auto = false
-  map.get(1)!.font.color = "#656565"
+//   map.get(1)!.font.size = new Size(25, "pt")
+//   map.get(1)!.font.is_auto = false
+//   map.get(1)!.font.color = "#656565"
 
-  map.set(2, {
-    id: 2,
-    UID: templateID,
-    type: "image",
-    fancyquotes: true,
-    bold: false,
-    italic: false,
-    value: images[0],
-    dragged: false,
-    padding: new Size(0.25, "rem"),
-    width: new Size(4.5, "rem"),
-    height: new Size(0, "auto"),
-    position: new Vec2(0.93, 0),
-    rect: () => null,
-    font: new FontOption()
-  })
+//   map.set(2, {
+//     id: 2,
+//     UID: templateID,
+//     type: "image",
+//     fancyquotes: true,
+//     bold: false,
+//     italic: false,
+//     value: images[0],
+//     dragged: false,
+//     padding: new Size(0.25, "rem"),
+//     width: new Size(4.5, "rem"),
+//     height: new Size(0, "auto"),
+//     position: new Vec2(0.93, 0),
+//     rect: () => null,
+//     font: new FontOption()
+//   })
 
-  return { map: map, nextID: 3 }
-}
+//   return { map: map, nextID: 3 }
+// }
 
 const template1 = [
   {
     id: 0,
-    UID: 1,
+    UID: "1693845772232_0_0",
     type: "text",
     fancyquotes: true,
     bold: false,
     italic: false,
     value: "Wybierz aby edytować...",
     dragged: false,
-    padding: {_v: 0.25, type: "rem"} as Size,
-    width: { _v: 0, type: "auto" } as Size,
-    height: { _v: 0, type: "auto" } as Size,
-    position: { x: 0, y: 0 } as Vec2,
+    padding: { _v: 0.25, type: "rem" },
+    width: { _v: 0, type: "auto" },
+    height: { _v: 0, type: "auto" },
+    position: { x: 0, y: 0 },
     font: {
       family: "Times",
-      size: { _v: 32, type: "pt" } as Size,
+      size: { _v: 32, type: "pt" },
       is_auto: true,
       color: "#000000"
-    } as FontOption
+    }
   },
   {
     id: 1,
-    UID: 1,
+    UID: "1693845772232_1_0",
     type: "text",
     fancyquotes: false,
     bold: false,
     italic: false,
     value: "Wybierz aby edytować...",
     dragged: false,
-    padding: { _v: 0.25, type: "rem" } as Size,
-    width: { _v: 0, type: "auto" } as Size,
-    height: { _v: 0, type: "auto" } as Size,
-    position: { x: 0, y: 0.0666 } as Vec2,
+    padding: { _v: 0.25, type: "rem" },
+    width: { _v: 0, type: "auto" },
+    height: { _v: 0, type: "auto" },
+    position: { x: 0, y: 0.0666 },
     font: {
       family: "Times",
-      size: { _v: 25, type: "pt" } as Size,
+      size: { _v: 25, type: "pt" },
       is_auto: false,
       color: "#656565"
-    } as FontOption
+    }
   },
   {
     id: 2,
-    UID: 1,
+    UID: "1693845772232_2_0",
     type: "image",
     fancyquotes: true,
     bold: false,
     italic: false,
     value: images[0],
     dragged: false,
-    padding: { _v: 0.25, type: "rem" } as Size,
-    width: { _v: 6.999999999999995, type: "%" } as Size,
-    height: { _v: 11.57029668926601, type: "%" } as Size,
-    position: { x: 0.93, y: 0 } as Vec2,
+    padding: { _v: 0.25, type: "rem" },
+    width: { _v: 13.356443885646948, type: "%" },
+    height: { _v: 21.569693196842636, type: "%" },
+    position: { x: 0.8664355611435305, y: 0 },
     font: {
       family: "Times",
-      size: { _v: 32, type: "pt" } as Size,
+      size: { _v: 32, type: "pt" },
       is_auto: true,
       color: "#000000"
-    } as FontOption
+    }
   }
 ] as ElementModel[]
-const templatate_definitions = [template1] as const
+
+const template2 = [
+  {
+    id: 0,
+    UID: "1",
+    type: "text",
+    fancyquotes: true,
+    bold: false,
+    italic: true,
+    value: "Wybierz aby edytować...",
+    dragged: false,
+    padding: { _v: 0.25, type: "rem" },
+    width: { _v: 0, type: "auto" },
+    height: { _v: 0, type: "auto" },
+    position: { x: 0.1335644388564695, y: 0 },
+    font: {
+      family: "Times",
+      size: { _v: 32, type: "pt" },
+      is_auto: true,
+      color: "#000000"
+    }
+  },
+  {
+    id: 1,
+    UID: "1",
+    fancyquotes: false,
+    bold: false,
+    italic: false,
+    position: { x: 0.1335644388564695, y: 0.056371226056534905 },
+    dragged: false,
+    type: "text",
+    padding: { _v: 0.25, type: "rem" },
+    width: { _v: 0, type: "auto" },
+    height: { _v: 0, type: "auto" },
+    value: "Wybierz aby edytować...",
+    font: {
+      family: "Arial",
+      size: { _v: 25, type: "pt" },
+      is_auto: false,
+      color: "#808080"
+    }
+  },
+  {
+    id: 2,
+    UID: "1",
+    fancyquotes: false,
+    bold: false,
+    italic: false,
+    position: { x: 0, y: 0 },
+    dragged: false,
+    type: "image",
+    padding: { _v: 0.25, type: "rem" },
+    width: { _v: 13.356443885646948, type: "%" },
+    height: { _v: 21.569693196842636, type: "%" },
+    value: images[0],
+    font: {
+      family: "Times",
+      size: { _v: 32, type: "pt" },
+      is_auto: true,
+      color: "#000000"
+    }
+  }
+] as ElementModel[]
+
+const templatate_definitions = [template1, template2] as const
 
 function buildTemplatesFromArr(
   ts: typeof templatate_definitions
 ): TemplateFN[] {
-  
   let ready = [] as TemplateFN[]
   for (let i = 0; i < ts.length; i++) {
     const t = ts[i]
@@ -498,6 +561,6 @@ function buildTemplatesFromArr(
 type TemplateFN = (TID: number) => TemplateT
 
 export const templates: TemplateFN[] = [
-  ...buildTemplatesFromArr(templatate_definitions),
+  ...buildTemplatesFromArr(templatate_definitions)
   // defaultTemplate
 ]

@@ -121,8 +121,8 @@ export default defineComponent({
 .expander-right {
   z-index: 999;
   position: absolute;
-  right: -1rem;
-  padding-right: 1rem;
+  right: -0.5rem;
+  padding-right: 0.5rem;
   top: 0;
   bottom: var(--sz);
   width: calc(var(--sz)/2);
@@ -138,8 +138,8 @@ export default defineComponent({
   position: absolute;
   right: var(--sz);
   left: 0;
-  bottom: -1rem;
-  padding-bottom: 1rem;
+  bottom: -0.5rem;
+  padding-bottom: 0.5rem;
   height: calc(var(--sz)/2);
 }
 .outer.active .expander-bottom:hover {
@@ -152,12 +152,12 @@ export default defineComponent({
 .expander-both {
   z-index: 999;
   position: absolute;
-  right: -1rem;
-  bottom: -1rem;
+  right: -0.5rem;
+  bottom: -0.5rem;
   height: var(--sz);
   width: var(--sz);
-  padding-right: 1rem;
-  padding-bottom: 1rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.5rem;
   box-sizing: content-box;
 }
 .outer.active .expander-both:hover {
@@ -201,7 +201,7 @@ img[src=""] {
   background-color: var(--app-background-color);
   aspect-ratio: 1/1;
   border: 2px solid var(--app-accent-color);
-  z-index: 999;
+  z-index: 1000;
   width: var(--sz);
   height: var(--sz);
   display: flex;
@@ -218,7 +218,7 @@ img[src=""] {
   background-color: var(--app-background-color);
   aspect-ratio: 1/1;
   border: 2px solid red;
-  z-index: 999;
+  z-index: 1000;
   width: var(--sz);
   height: var(--sz);
   display: flex;
