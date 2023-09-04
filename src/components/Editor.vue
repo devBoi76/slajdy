@@ -74,23 +74,12 @@
             "
           ></CSSSizeInput>
         </div>
-
-        <!-- <div class="section">
-          <CSSSizeInput
-            :title="'Szerokość'"
-            :size="
-              editorStore.getElementModel(editorStore.selectedElementID).width
-            "
-          ></CSSSizeInput>
-          <CSSSizeInput
-            :title="'Wysokość'"
-            :size="
-              editorStore.getElementModel(editorStore.selectedElementID).height
-            "
-          ></CSSSizeInput>
-        </div> -->
       </Card>
-      <Card v-else></Card>
+      <Card v-else> 
+        <MultiSelection :value="'light'" v-model="selectedColorTheme"></MultiSelection>
+        <MultiSelection :value="'reading'" v-model="selectedColorTheme"></MultiSelection>
+        <MultiSelection :value="'dark'" v-model="selectedColorTheme"></MultiSelection>
+      </Card>
     </div>
   </div>
 </template>
@@ -113,6 +102,7 @@ import ButtonCheckbox from "./input/ButtonCheckbox.vue"
 import TemplateLoaderModal from "./modals/TemplateLoaderModal.vue"
 import IconDownload from "@/components/icons/IconDownload.vue"
 import IconUpload from "@/components/icons/IconUpload.vue"
+import MultiSelection from "./input/MultiSelection.vue"
 
 const veditorcanvas = ref<InstanceType<typeof EditorCanvas> | null>(null)
 const vimagepickermodal = ref<InstanceType<typeof ImagePickerModal> | null>(
@@ -138,7 +128,7 @@ export default defineComponent({
     return {
       // imageModalIsOpen: false,
       templateModalIsOpen: false,
-      Promise: Promise,
+      selectedColorTheme: "light" as "light" | "reading" | "black"
     }
   },
   methods: {
