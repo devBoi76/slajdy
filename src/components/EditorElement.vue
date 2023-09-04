@@ -6,34 +6,24 @@
       :class="{ active: isActive }"
       :style="model.type != 'image' ? stylingCSS() : { lineHeight: '0' }"
     >
-      <div v-if="model.type == 'text'">
+      <p
+        v-if="model.type == 'text'"
+        :style="`color: ${
+          model.font.is_auto ? 'var(--font-color)' : model.font.color
+        }`"
+      >
         {{ model.fancyquotes ? "„" : "" }}
-        <p
-          :style="`color: ${
-            model.font.is_auto ? 'var(--font-color)' : model.font.color
-          }`"
-    
-          @dblclick="
-            console.log($event.target)
-            ;($event.target as HTMLParagraphElement).contentEditable = 'true'
-          "
-          @blur="
-            ($event.target as HTMLParagraphElement).contentEditable = 'false';
-            model.value = model.fancyquotes
-              ? ($event.target as HTMLParagraphElement)['innerText']
-              : ($event.target as HTMLParagraphElement)['innerText']
-          "
-        >
-        {{ model.value}}
-        </p>
+        {{ model.value }}
         {{ model.fancyquotes ? "”" : "" }}
-      </div>
+      </p>
       <img
-        v-else-if="model.type == 'image'"
+        v-if="model.type == 'image'"
         :src="model.value"
         :style="stylingCSS"
       />
-      <p v-else>Unknown component type! `{{ model }}`</p>
+      <p v-if="model.type != 'text' && model.type != 'image'">
+        Unknown component type! `{{ model }}`
+      </p>
 
       <div
         class="move-button"
@@ -52,6 +42,7 @@
         <Lucide :name="'Trash2'" />
       </div>
       <div
+        v-if="model.type == 'image'"
         class="expander-both"
         @mousedown="
           editorStore.setDragged({
@@ -62,6 +53,7 @@
       ></div>
 
       <div
+        v-if="model.type == 'image'"
         class="expander-bottom"
         @mousedown="
           editorStore.setDragged({
@@ -71,6 +63,7 @@
         "
       ></div>
       <div
+        v-if="model.type == 'image'"
         class="expander-right"
         @mousedown="
           editorStore.setDragged({
@@ -293,6 +286,6 @@ img[src=""] {
 
 .active {
   outline: 2px dashed var(--app-accent-color);
-  /* user-select: none; */
+  user-select: none;
 }
 </style>

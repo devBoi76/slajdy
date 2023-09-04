@@ -187,9 +187,11 @@ export default defineComponent({
 
         if (!snapToSelf && mins[0]?.d <= SNAP_DISTANCE) {
           this.editorStore.highlightedGuides.push(mins[0].g)
+
           if (mins[1] && Math.abs(mins[1].d - mins[0].d) < 0.01) {
             this.editorStore.highlightedGuides.push(mins[1].g)
           }
+          
           return mins[0].pos
         } else if (
           snapToSelf &&
