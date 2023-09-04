@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "html-to-image": "^1.11.11",
+    "lucide-vue-next": "^0.274.0",
     "pinia": "^2.1.6",
     "vue": "^3.3.4"
   },
