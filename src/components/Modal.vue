@@ -4,7 +4,7 @@
       <div class="wrapper">
             <header>
                 <h1>{{ title }}</h1>
-                <IconX @click="close()"></IconX>
+                <Lucide :name="'X'" @click="close()"/>
             </header>
             <main>
               <slot>
@@ -97,7 +97,7 @@ const emits = defineEmits<{
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import IconX from "./icons/IconX.vue";
+import Lucide from "./icons/Lucide.vue";
 
 export default defineComponent({
   expose: ["close", "open"],

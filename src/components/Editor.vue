@@ -11,13 +11,13 @@
             class="button-with-icon"
             @click="editorStore.addElement(`text`)"
           >
-            <IconType /> Dodaj tekst
+            <Lucide :name="'Type'" /> Dodaj tekst
           </button>
           <button
             class="button-with-icon"
             @click="addImageAndOpen()"
           >
-            <IconImage /> Dodaj zdjęcie
+            <Lucide :name="'Image'" /> Dodaj zdjęcie
           </button>
         </div>
 
@@ -29,16 +29,23 @@
         v-model="editorStore.defaultFont"></InlineFontInput> -->
 
         <ButtonCheckbox v-if="editorStore.selectedElement?.type=='text'" v-model="editorStore.selectedElement.fancyquotes">
-          Cudzysłów
+          <Lucide :name="'Quote'"/>
+        </ButtonCheckbox>
+        <ButtonCheckbox v-if="editorStore.selectedElement?.type=='text'" v-model="editorStore.selectedElement.bold">
+          <Lucide :name="'Bold'"/>
+        </ButtonCheckbox>
+        <ButtonCheckbox v-if="editorStore.selectedElement?.type=='text'" v-model="editorStore.selectedElement.italic">
+          <Lucide :name="'Italic'"/>
         </ButtonCheckbox>
         <div class="section hr" v-show="!editorStore.selectedElement">
-          <button class="button-with-icon" @click="templateModalIsOpen=true"><IconUpload/>Załaduj szablon</button>
-          <button class="button-with-icon" @click="saveURIAsFile(stringToSRC(JSON.stringify(editorStore.saveableElements), 'text/json'), 'template.json')"><IconDownload/>Zapisz szablon</button>
+          <button class="button-with-icon" @click="templateModalIsOpen=true"><Lucide :name="'Upload'"/>Załaduj szablon</button>
+          <button class="button-with-icon" @click="saveURIAsFile(stringToSRC(JSON.stringify(editorStore.saveableElements), 'text/json'), 'template.json')"><Lucide :name="'Download'"/>Zapisz szablon</button>
           <button
             class="button-with-icon"
             @click="saveBase64AsFile(veditorcanvas!.getImageURI(), 'slajd.png'); console.log(editorStore.elements)"
           >
-            <IconSave /> Zapisz zdjęcie
+          <Lucide :name="'Save'"/> Zapisz zdjęcie
+            
           </button>
         </div>
         <TemplateLoaderModal :is-open="templateModalIsOpen" @update:is-open="v=>templateModalIsOpen=v"></TemplateLoaderModal>
@@ -91,15 +98,13 @@ import { defineComponent, nextTick, ref, type Ref } from "vue"
 import Card from "./Card.vue"
 import CSSSizeInput from "./input/CSSSizeInput.vue"
 import ImagePickerModal from "./modals/ImagePickerModal.vue"
-import IconSave from "./icons/IconSave.vue"
-import IconType from "./icons/IconType.vue"
-import IconImage from "./icons/IconImage.vue"
+import Lucide from "@/components/icons/Lucide.vue"
+
 import { images } from "@/scripts/images"
 import InlineFontInput from "@/components/input/InlineFontInput.vue"
 import ButtonCheckbox from "./input/ButtonCheckbox.vue"
 import TemplateLoaderModal from "./modals/TemplateLoaderModal.vue"
-import IconDownload from "@/components/icons/IconDownload.vue"
-import IconUpload from "@/components/icons/IconUpload.vue"
+
 import MultiSelection from "./input/MultiSelection.vue"
 import TwoColorIcon from "./icons/TwoColorIcon.vue"
 import ColorThemeSelection from "./ColorThemeSelection.vue"

@@ -1,8 +1,8 @@
 <template>
 
 <button class="button-with-icon" :style="buttonCSS" @click="updateValue(!modelValue)">
-    <IconCheck v-show="modelValue"></IconCheck>
-    <IconX v-show="!modelValue"></IconX>
+    <Lucide :name="'CheckSquare'"  v-show="modelValue"/>
+    <Lucide :name="'XSquare'"  v-show="!modelValue"/>
     <slot></slot>
 </button>
 
@@ -23,8 +23,8 @@ const props = defineProps<{
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import IconCheck from '../icons/IconCheck.vue';
-import IconX from '../icons/IconX.vue';
+
+import Lucide from '../icons/Lucide.vue';
 
 export default defineComponent({
     methods: {

@@ -4,7 +4,7 @@
       class="outer"
       @click.stop="setActiveComponent"
       :class="{ active: isActive }"
-      :style="model.type != 'image' ? stylingCSS : {lineHeight: '0'}"
+      :style="model.type != 'image' ? stylingCSS() : {lineHeight: '0'}"
     >
       <p
         :style="`color: ${model.font.is_auto ? 'var(--font-color)' : model.font.color}`"
@@ -21,11 +21,11 @@
         v-if="isActive"
         @mousedown="editorStore.setDragged({sourceID: model.id, type: DraggedElementType.Move})"
       >
-        <IconMove />
+        <Lucide :name="'Move'"/>
       </div>
-      
+
       <div class="trash-button" v-if="isActive" @mousedown="deleteElement">
-        <IconTrash />
+        <Lucide :name="'Trash2'"/>
       </div>
       <div class="expander-both" @mousedown="editorStore.setDragged({sourceID: model.id, type: DraggedElementType.ExpandXY})"></div>
 
@@ -39,77 +39,81 @@
 import { defineComponent, ref, type PropType } from "vue"
 
 import { useEditorStore, type ElementModel, Vec2, DraggedElementType } from "@/stores/editor"
-import IconMove from "./icons/IconMove.vue"
-
-import IconTrash from "./icons/IconTrash.vue"
+import Lucide from "./icons/Lucide.vue"
 
 export default defineComponent({
-  name: "EditorElement",
-  expose: ["boundingRect"],
-  props: {
-    model: {
-      type: Object as PropType<ElementModel>,
-      required: true
+    name: "EditorElement",
+    expose: ["boundingRect"],
+    props: {
+        model: {
+            type: Object as PropType<ElementModel>,
+            required: true
+        },
+        scale: {
+            type: Number,
+            required: true
+        },
+        shouldBind: { type: Boolean, required: true }
     },
-    scale: {
-      type: Number,
-      required: true
+    setup() {
+        const editorStore = useEditorStore();
+        return { editorStore: editorStore, DraggedElementType };
     },
-    shouldBind: {type: Boolean, required: true}
-  },
-
-  setup() {
-    const editorStore = useEditorStore()
-    return { editorStore: editorStore, DraggedElementType }
-  },
-  mounted() {
-    if (this.shouldBind) {
-      this.model.rect = (() =>
-      (this.$refs.outer as HTMLDivElement).getBoundingClientRect()).bind(this)
-      console.log(this.$refs, this.model.rect)
-    }
-  },
-  methods: {
-    setActiveComponent() {
-      this.editorStore.selectedElementID = this.$props.model.id
+    mounted() {
+        if (this.shouldBind) {
+            this.model.rect = (() => (this.$refs.outer as HTMLDivElement).getBoundingClientRect()).bind(this);
+            console.log(this.$refs, this.model.rect);
+        }
     },
-    // model {
-    //   return this.editorStore.elements.get(this.model.id)!
-    // },
-    deleteElement() {
-      this.editorStore.deleteElement(this.model.id)
-    }
-  },
-  computed: {
-    isActive() {
-      return this.editorStore.selectedElementID == this.$props.model.id
+    methods: {
+        setActiveComponent() {
+            this.editorStore.selectedElementID = this.$props.model.id;
+        },
+        // model {
+        //   return this.editorStore.elements.get(this.model.id)!
+        // },
+        deleteElement() {
+            this.editorStore.deleteElement(this.model.id);
+        },
+        stylingCSS() {
+          console.log(this.model,{
+                padding: `calc(${this.model.padding.string}*${this.model.padding.scales ? this.scale : 1})`,
+                fontSize: !this.model.font.is_auto
+                    ? `calc(${this.model.font.size.string}*${this.scale})`
+                    : `calc(var(--font-size)*${this.scale})`,
+                fontFamily: `${!this.model.font.is_auto
+                    ? this.model.font?.family
+                    : "inherit"}`,
+                fontStyle: this.model.italic ? "italic" : "normal",
+                fontWeight: this.model.bold ? "bold" : "normal",
+            })
+            return {
+                padding: `calc(${this.model.padding.string}*${this.model.padding.scales ? this.scale : 1})`,
+                fontSize: !this.model.font.is_auto
+                    ? `calc(${this.model.font.size.string}*${this.scale})`
+                    : `calc(var(--font-size)*${this.scale})`,
+                fontFamily: `${!this.model.font.is_auto
+                    ? this.model.font?.family
+                    : "inherit"}`,
+                fontStyle: this.model.italic ? "italic" : "normal",
+                fontWeight: this.model.bold ? "bold" : "normal",
+            };
+        }
     },
-
-    positionCss() {
-      return {
-        left: `calc(${this.model.position.x * 100}%)`,
-        top: `calc(${this.model.position.y * 100}%)`,
-        width: `calc(${this.model.width.string}*${this.model.width.scales ? this.scale : 1})`,
-        height: `calc(${this.model.height.string}*${this.model.height.scales ? this.scale : 1})`,
-      }
+    computed: {
+        isActive() {
+            return this.editorStore.selectedElementID == this.$props.model.id;
+        },
+        positionCss() {
+            return {
+                left: `calc(${this.model.position.x * 100}%)`,
+                top: `calc(${this.model.position.y * 100}%)`,
+                width: `calc(${this.model.width.string}*${this.model.width.scales ? this.scale : 1})`,
+                height: `calc(${this.model.height.string}*${this.model.height.scales ? this.scale : 1})`,
+            };
+        },
     },
-    stylingCSS() {
-      return {
-        padding: `calc(${this.model.padding.string}*${this.model.padding.scales ? this.scale : 1})`,
-        fontSize: 
-          !this.model.font.is_auto
-            ? `calc(${this.model.font?.size.string}*${this.scale})`
-            : `calc(var(--font-size)*${this.scale})`
-        ,
-        fontFamily: `${
-          !this.model.font.is_auto
-            ? this.model.font?.family
-            : "inherit"
-        }`
-      }
-    }
-  },
-  components: { IconMove, IconTrash }
+    components: { Lucide }
 })
 </script>
 
@@ -166,6 +170,8 @@ export default defineComponent({
 p {
   text-align: center;
   white-space: pre;
+  font-style: inherit;
+  font-weight: inherit;
 }
 
 img {

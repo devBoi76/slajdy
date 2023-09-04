@@ -6,7 +6,7 @@
             <img class="showcase-image" v-show="modelValue" :src="modelValue">
             <div class="showcase-image">
                 Wybierz z komputera
-                <IconFilePlus v-show="!modelValue"></IconFilePlus>
+                <Lucide name="FilePlus2" v-show="!modelValue"/>
             </div>
         </div>
         <input type="file" accept="image/apng, image/avif, image/gif, image/jpeg, image/png, image/svg+xml, image/webp" multiple="false" v-on:change=" (ev) => {handleInput(fileToSRC((ev.target as HTMLInputElement).files![0]))}">
@@ -50,7 +50,7 @@ const vpickerimg = ref<InstanceType<typeof HTMLImageElement> | null>(null)
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import IconFilePlus from '../icons/IconFilePlus.vue';
+import Lucide from '../icons/Lucide.vue';
 
 export default defineComponent({
     emits: ["update:modelValue", "imageInput"],
