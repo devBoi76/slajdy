@@ -141,13 +141,14 @@ export type ColorThemes = "light" | "reading" | "dark"
 
 export type Resolutions = "1080p" | "1440p" | "2160p"
 
+// const storage = useLocalStorage("theme", "light")
 
 export const useEditorStore = defineStore("editor", {
   state: () => {
     return {
       defaultFont: new FontOption(),
-      colorTheme: "light" as ColorThemes,
-      slideResolution: "1080p" as Resolutions,
+      colorTheme: (localStorage.getItem("app-theme") || "light") as ColorThemes,
+      slideResolution: (localStorage.getItem("app-slide-resolution") || "1080p") as Resolutions,
       canvasColors: {
         bg: "#ffffff"
       } as CanvasColors,

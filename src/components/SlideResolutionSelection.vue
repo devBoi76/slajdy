@@ -64,6 +64,7 @@ const value = computed<typeof props.modelValue>({
         return props.modelValue
     },
     set(value) {
+        localStorage.setItem("app-slide-resolution", value)
         emit("update:modelValue", value)
     }
 })

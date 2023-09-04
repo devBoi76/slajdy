@@ -19,6 +19,7 @@
     position: absolute;
     inset: 0;
     max-height: 100%;
+    background-color: var(--app-background-color);
 }
 
 div.showcase-image {

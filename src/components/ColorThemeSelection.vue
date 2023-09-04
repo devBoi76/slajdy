@@ -2,17 +2,17 @@
     <div class="container">
         <div>
             <MultiSelection :value="'light'" v-model="value">
-                <div class="icon-wrapper" :style="value == 'light' ? 'width: 6rem' : ''">
+                <div class="icon-wrapper" :style="value == 'light' ? 'width: 7rem' : ''">
                     <TwoColorIcon :foreground="'#3d3d3f'" :background="'#fff'"/>
                 </div>
             </MultiSelection>
             <MultiSelection :value="'reading'" v-model="value">
-                <div class="icon-wrapper" :style="value == 'reading' ? 'width: 6rem' : ''">
+                <div class="icon-wrapper" :style="value == 'reading' ? 'width: 7rem' : ''">
                     <TwoColorIcon :foreground="'#14120d'" :background="'#f9f3ea'"/>
                 </div>
             </MultiSelection>
             <MultiSelection :value="'dark'" v-model="value">
-                <div class="icon-wrapper" :style="value == 'dark' ? 'width: 6rem' : ''">
+                <div class="icon-wrapper" :style="value == 'dark' ? 'width: 7rem' : ''">
                     <TwoColorIcon :foreground="'#edebe5'" :background="'#000'"/>
                 </div>
             </MultiSelection>
@@ -23,11 +23,11 @@
 
 <style scoped>
     .icon-wrapper {
-        width: 4rem;
+        width:5rem;
         transition: width 150ms;
     }
     .icon-wrapper:hover {
-        width: 5rem;
+        width: 6rem;
     }
     .container {
         display: flex;
@@ -45,7 +45,6 @@ import MultiSelection from '@/components/input/MultiSelection.vue';
 import TwoColorIcon from '@/components/icons/TwoColorIcon.vue';
 import {type ColorThemes} from '@/stores/editor'
 
-
 const props = defineProps<{
     modelValue: ColorThemes
 }>()
@@ -59,6 +58,7 @@ const value = computed<typeof props.modelValue>({
         return props.modelValue
     },
     set(value) {
+        localStorage.setItem("app-theme", value)
         emit("update:modelValue", value)
     }
 })

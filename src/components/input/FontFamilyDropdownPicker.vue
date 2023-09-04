@@ -101,6 +101,7 @@ export default defineComponent({
   position: relative;
   user-select: none;
   min-width: 12rem;
+  cursor: pointer;
 }
 .showcase.active {
   border-bottom-left-radius: 0;
@@ -125,6 +126,10 @@ export default defineComponent({
   padding: 0.25rem;
   position: relative;
   cursor: pointer;
+  transition: background-color 150ms;
+}
+.option:hover {
+  background-color: var(--app-foreground-hover-color);
 }
 .option.active::after {
   content: "";
