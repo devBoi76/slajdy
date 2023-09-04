@@ -46,7 +46,10 @@ header {
   justify-content: space-between;
   align-items: center;
   border-bottom: 2px solid var(--app-divider-color);
+  box-shadow: 0 -12px 12px 4px var(--app-text-color);
   padding: 0.5rem 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .v-enter-active,

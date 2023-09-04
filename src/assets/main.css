@@ -1,11 +1,25 @@
 @import "./base.css";
 
-body {
+#app {
   background-color: var(--app-background-color);
+  color: var(--app-text-color);
 }
 
 .section:not(:first-of-type):not(.hr) {
   margin-top: 0.5rem;
+}
+
+input, button, select
+ {
+  background-color: var(--app-background-color);
+  border-color: var(--app-background-color);
+  color: var(--app-text-color);
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+input:hover, button:hover, select:hover {
+  background-color: var(--app-foreground-hover-color);
 }
 
 input, button {
@@ -26,7 +40,7 @@ hr {
   margin-block: 0.5rem;
 }
 
-body {
+#app {
   height: 100vh;
 }
 

@@ -53,7 +53,7 @@ export class FontOption {
 }
 
 export interface CanvasColors {
-  bg: string
+  bg: string,
 }
 
 const component_type = ["text", "image", "customhtml"] as const
@@ -97,8 +97,6 @@ export enum DragGuideSource {
   Page = "lightblue"
 }
 
-
-
 export class DragGuide {
   constructor(v: number, t: DragGuideSource, o: Orientation, sourceID: number) {
     this.value = v
@@ -129,11 +127,13 @@ export type DraggedElement = {
   type: DraggedElementType
 } | null
 
+export type ColorThemes = "light" | "reading" | "dark"
+
 export const useEditorStore = defineStore("editor", {
   state: () => {
     return {
       defaultFont: new FontOption(),
-
+      colorTheme: "light" as ColorThemes,
       canvasColors: {
         bg: "#ffffff"
       } as CanvasColors,
@@ -156,8 +156,12 @@ export const useEditorStore = defineStore("editor", {
       return Array.from(this.elements.values())
     }
   },
-
+  
   actions: {
+    setColorTheme(t: ColorThemes) {
+      document.body.className = t;
+      this.colorTheme = t
+    },
     setTemplate(t: TemplateT) {
       this.elements = t.map
       this.nextID = t.nextID

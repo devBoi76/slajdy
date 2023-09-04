@@ -7,7 +7,7 @@
       :style="model.type != 'image' ? stylingCSS : {lineHeight: '0'}"
     >
       <p
-        :style="`color: ${model.font.color}`"
+        :style="`color: ${model.font.is_auto ? 'var(--font-color)' : model.font.color}`"
         v-if="model.type == 'text'"
       >
         {{ model.fancyquotes ? "„" : "" }}{{ model.value
@@ -23,7 +23,7 @@
       >
         <IconMove />
       </div>
-
+      
       <div class="trash-button" v-if="isActive" @mousedown="deleteElement">
         <IconTrash />
       </div>
@@ -126,7 +126,7 @@ export default defineComponent({
 .outer.active .expander-right:hover {
   cursor: e-resize;
   /* background-image: linear-gradient(to right, transparent, var(--app-accent-color-light)) */
-  border-right: 2px solid black;
+  border-right: 2px solid var(--app-text-color);
 }
 
 .expander-bottom {
@@ -141,7 +141,7 @@ export default defineComponent({
 .outer.active .expander-bottom:hover {
   cursor: s-resize;
   /* background-image: linear-gradient(to bottom, transparent, var(--app-accent-color-light)); */
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid var(--app-text-color);
   box-sizing: content-box;
 }
 
@@ -159,8 +159,8 @@ export default defineComponent({
 .outer.active .expander-both:hover {
   cursor: se-resize;
   /* background-image: linear-gradient(to bottom right, transparent, var(--app-accent-color-light)) */
-  border-right: 2px solid black;
-  border-bottom: 2px solid black;
+  border-right: 2px solid var(--app-text-color);
+  border-bottom: 2px solid var(--app-text-color);
 }
 
 p {

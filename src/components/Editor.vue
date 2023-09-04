@@ -47,7 +47,7 @@
     </div>
 
     <div id="editor-page">
-      <Card v-if="editorStore.selectedElementID != -1">
+      <Card v-if="editorStore.selectedElementID != -1" class="l">
         <div class="section" v-if="editorStore.selectedElement?.type == 'text'">
           <h4>Tekst</h4>
           <textarea v-model="editorStore.selectedElement!.value"></textarea>
@@ -75,10 +75,8 @@
           ></CSSSizeInput>
         </div>
       </Card>
-      <Card v-else> 
-        <MultiSelection :value="'light'" v-model="selectedColorTheme"></MultiSelection>
-        <MultiSelection :value="'reading'" v-model="selectedColorTheme"></MultiSelection>
-        <MultiSelection :value="'dark'" v-model="selectedColorTheme"></MultiSelection>
+      <Card v-else class="l"> 
+        <ColorThemeSelection v-model="editorStore.colorTheme"/>
       </Card>
     </div>
   </div>
@@ -88,7 +86,7 @@
 
 <script setup lang="ts">
 import EditorCanvas from "./EditorCanvas.vue"
-import { useEditorStore } from "@/stores/editor"
+import { useEditorStore, type ColorThemes } from "@/stores/editor"
 import { defineComponent, nextTick, ref, type Ref } from "vue"
 import Card from "./Card.vue"
 import CSSSizeInput from "./input/CSSSizeInput.vue"
@@ -103,6 +101,8 @@ import TemplateLoaderModal from "./modals/TemplateLoaderModal.vue"
 import IconDownload from "@/components/icons/IconDownload.vue"
 import IconUpload from "@/components/icons/IconUpload.vue"
 import MultiSelection from "./input/MultiSelection.vue"
+import TwoColorIcon from "./icons/TwoColorIcon.vue"
+import ColorThemeSelection from "./ColorThemeSelection.vue"
 
 const veditorcanvas = ref<InstanceType<typeof EditorCanvas> | null>(null)
 const vimagepickermodal = ref<InstanceType<typeof ImagePickerModal> | null>(
@@ -128,7 +128,7 @@ export default defineComponent({
     return {
       // imageModalIsOpen: false,
       templateModalIsOpen: false,
-      selectedColorTheme: "light" as "light" | "reading" | "black"
+      selectedColorTheme: "light" as ColorThemes
     }
   },
   methods: {
@@ -236,7 +236,8 @@ export default defineComponent({
   display: flex;
   align-items: end;
   gap: 0.75rem;
-  height: 5rem;
+  height: 4.5rem;
+  box-shadow: 0 -12px 12px 4px var(--app-text-color);
 }
 
 #editor-page {

@@ -5,6 +5,8 @@
     tabindex="0"
     @mousemove="handleMouseMove($event, $event.ctrlKey)"
     @mouseup="handleMouseUp"
+    id="app"
+    :class="colorThemeClass"
   >
     <Editor ref="editor"></Editor>
   </div>
@@ -264,6 +266,11 @@ export default defineComponent({
       if (this.editorStore.draggedElementID) {
         this.editorStore.setDragged(null)
       }
+    }
+  },
+  computed: {
+    colorThemeClass() {
+      return this.editorStore.colorTheme + "-mode";
     }
   },
   components: {

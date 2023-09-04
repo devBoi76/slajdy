@@ -1,5 +1,12 @@
 :root {
   --app-border-radius: 0.5rem;
+  --app-font-size: 1rem;
+  --app-font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+}
+
+#app.light-mode {
   --app-background-color: #f3f3f3;
   --app-foreground-color: white;
   --app-foreground-hover-color: #f8f8f8;
@@ -7,11 +14,28 @@
   --app-divider-color: #e4e4e4;
   --app-accent-color: #ee866d;
   --app-accent-color-light: #ffba84;
-  --app-font-size: 1rem;
-  --app-font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
 }
+
+#app.reading-mode {
+  --app-background-color: #e6e0d9;
+  --app-foreground-color: #f9f3ea;
+  --app-foreground-hover-color: #d3cbc2;
+  --app-text-color: #14120d;
+  --app-divider-color: #ccc7c1;
+  --app-accent-color: #ee866d;
+  --app-accent-color-light: #ffba84;
+}
+
+#app.dark-mode {
+  --app-background-color: black;
+  --app-foreground-color: #161514;
+  --app-foreground-hover-color: #161514;
+  --app-text-color: #edebe5;
+  --app-divider-color: #626262;
+  --app-accent-color: #ee866d;
+  --app-accent-color-light: #ffba84;
+}
+
 
 *,
 *::before,

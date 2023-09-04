@@ -164,7 +164,7 @@ export default defineComponent({
   computed: {
     cssVars() {
       return {
-        "--bgcolor": this.editorStore.canvasColors.bg,
+        "--bgcolor": 'var(--app-foreground-color)',
         "--font-family": this.editorStore.defaultFont.family,
         "--font-size":
           this.editorStore.defaultFont.size.v +
@@ -197,7 +197,8 @@ export default defineComponent({
 }
 
 #canvas-wrapper {
-  border: 2px solid var(--app-divider-color);
+  /* border: 2px solid var(--app-divider-color); */
+  max-height: 90vh;
   margin-bottom: auto;
   margin-right: 4rem;
   aspect-ratio: 16/9;

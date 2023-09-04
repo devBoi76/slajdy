@@ -9,8 +9,16 @@
   border-radius: var(--app-border-radius);
   background-color: var(--app-foreground-color);
   margin-bottom: 1rem;
-  border: 2px solid var(--app-divider-color);
+  /* border: 2px solid var(--app-divider-color); */
   width: 20rem;
   padding: 1rem;
+}
+
+.card.l {
+  border-left: none;
+}
+
+.card.r {
+  border-left: none;
 }
 </style>
