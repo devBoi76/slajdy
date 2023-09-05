@@ -110,6 +110,7 @@ export default defineComponent({
 
 .dropdown {
   position: absolute;
+  z-index: 2;
   background-color: var(--app-background-color);
   left: -2px;
   right: -2px;

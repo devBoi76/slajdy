@@ -41,7 +41,7 @@
   <div class="section hr">
     <label>
       <h4>Kolor</h4>
-      <ColorPicker v-model="modelValue.color"></ColorPicker>
+      <ColorPicker v-model="modelValue.color" @change="modelValue.is_auto = false"></ColorPicker>
     </label>
   </div>
   <!-- <div class="section hr">

@@ -53,3 +53,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+::selection {
+  color: var(--app-foreground-color);
+  background: var(--app-accent-color);
+}

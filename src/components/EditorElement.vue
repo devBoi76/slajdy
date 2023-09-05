@@ -175,7 +175,7 @@ export default defineComponent({
 
 <style scoped>
 .expander-right {
-  z-index: 999;
+  /* z-index: 999; */
   position: absolute;
   right: -0.5rem;
   padding-right: 0.5rem;
@@ -190,7 +190,7 @@ export default defineComponent({
 }
 
 .expander-bottom {
-  z-index: 999;
+  /* z-index: 999; */
   position: absolute;
   right: var(--sz);
   left: 0;
@@ -206,7 +206,7 @@ export default defineComponent({
 }
 
 .expander-both {
-  z-index: 999;
+  /* z-index: 999; */
   position: absolute;
   right: -0.5rem;
   bottom: -0.5rem;
@@ -258,7 +258,7 @@ img[src=""] {
   background-color: var(--app-background-color);
   aspect-ratio: 1/1;
   border: 2px solid var(--app-accent-color);
-  z-index: 1000;
+  z-index: 1;
   width: var(--sz);
   height: var(--sz);
   display: flex;
@@ -275,7 +275,7 @@ img[src=""] {
   background-color: var(--app-background-color);
   aspect-ratio: 1/1;
   border: 2px solid red;
-  z-index: 1000;
+  z-index: 1;
   width: var(--sz);
   height: var(--sz);
   display: flex;

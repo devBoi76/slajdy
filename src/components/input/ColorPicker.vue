@@ -16,6 +16,7 @@ export default defineComponent({
     },
     methods: {
         handleInput(value: string) {
+            this.$emit("change")
             this.$emit("update:modelValue", value)
         }
     }

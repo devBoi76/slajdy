@@ -262,11 +262,7 @@ export default defineComponent({
   border-bottom-left-radius: 0;
 }
 
-textarea {
-  height: 5rem;
-  width: 100%;
-  resize: vertical;
-}
+
 
 label > * {
   margin-left: 0.25rem;

@@ -9,6 +9,22 @@
   margin-top: 0.5rem;
 }
 
+textarea {
+  height: 5rem;
+  width: 100%;
+  resize: vertical;
+  border-radius: var(--app-border-radius);
+  border: 2px solid var(--app-divider-color);
+  font-family: inherit;
+  background-color: var(--app-foreground-color);
+  color: var(--app-text-color);
+}
+
+textarea:focus-visible, input:focus-visible, button:focus-visible, select:focus-visible {
+  border-color: var(--app-accent-color) !important;
+  outline: 2px solid var(--app-accent-color-light);
+}
+
 input, button, select
 {
   background-color: var(--app-background-color);
@@ -26,22 +42,31 @@ input:hover, button:hover, select:hover {
   background-color: var(--app-foreground-hover-color);
 }
 
-input, button {
+button {
   border: 2px solid var(--app-divider-color);
+  border-radius: var(--app-border-radius);
 }
 input {
   border-radius: 0;
-}
-input, select {
   font-size: var(--app-font-size);
+  border: 2px solid var(--app-divider-color);
 }
-button {
-  border-radius: var(--app-border-radius);
+select {
+  font-size: var(--app-font-size);
 }
 
 hr {
   border: 1px solid var(--app-divider-color);
   margin-block: 0.5rem;
+}
+
+input[type=color] {
+  border-radius: var(--app-border-radius);
+  padding: 0;
+  border: 4px solid var(--app-accent-color);
+  overflow: hidden;
+  height: 2rem;
+  border: 0.25rem solid var(--app-divider-color);
 }
 
 #app {
