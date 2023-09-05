@@ -30,6 +30,7 @@
         width: 5rem;
         transition: width 150ms;
         font-weight: bold;
+        background-color: var(--app-foreground-color);
     }
     .selection-wrapper:hover {
         width: 6rem;

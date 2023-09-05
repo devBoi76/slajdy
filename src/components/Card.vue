@@ -14,6 +14,10 @@
   padding: 1rem;
 }
 
+.card.t {
+  background-color: transparent;
+}
+
 .card.l {
   border-left: none;
 }

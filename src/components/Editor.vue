@@ -53,8 +53,8 @@
       </div>
     </div>
 
-    <div id="editor-page">
-      <Card v-if="editorStore.selectedElementID != -1" class="l">
+    <div id="editor-page" class="fg">
+      <Card v-if="editorStore.selectedElementID != -1" class="l t">
         <div class="section" v-if="editorStore.selectedElement?.type == 'text'">
           <h4>Tekst</h4>
           <textarea ref='vtexteditortextarea' v-model="editorStore.selectedElement!.value"></textarea>
@@ -82,7 +82,7 @@
           ></CSSSizeInput>
         </div>
       </Card>
-      <Card v-else class="l">
+      <Card v-else class="l t">
         <div class="section">
           <ColorThemeSelection v-model="editorStore.colorTheme"/>
         </div>

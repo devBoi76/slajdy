@@ -10,12 +10,16 @@
 }
 
 input, button, select
- {
+{
   background-color: var(--app-background-color);
   border-color: var(--app-background-color);
   color: var(--app-text-color);
   cursor: pointer;
   transition: background-color 150ms;
+}
+
+.fg input, .fg button, .fg select {
+  background-color: var(--app-foreground-color);
 }
 
 input:hover, button:hover, select:hover {

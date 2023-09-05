@@ -17,6 +17,7 @@
   overflow: hidden;
   cursor: pointer;
   box-shadow: 0 0 4px var(--app-text-color);
+  transition: border-radius 150ms;
 }
 
 .outer:first-of-type {
@@ -30,7 +31,8 @@
 }
 
 .outer[selected="true"] {
-  /* border-color: var(--app-accent-color); */
+  border-top-right-radius: var(--app-border-radius);
+  border-bottom-right-radius: var(--app-border-radius);
 }
 </style>
 

@@ -2,17 +2,17 @@
     <div class="container">
         <div>
             <MultiSelection :value="'light'" v-model="value">
-                <div class="icon-wrapper" :style="value == 'light' ? 'width: 7rem' : ''">
+                <div class="icon-wrapper" :active="value == 'light'">
                     <TwoColorIcon :foreground="'#3d3d3f'" :background="'#fff'"/>
                 </div>
             </MultiSelection>
             <MultiSelection :value="'reading'" v-model="value">
-                <div class="icon-wrapper" :style="value == 'reading' ? 'width: 7rem' : ''">
+                <div class="icon-wrapper" :active="value == 'reading'">
                     <TwoColorIcon :foreground="'#14120d'" :background="'#f9f3ea'"/>
                 </div>
             </MultiSelection>
             <MultiSelection :value="'dark'" v-model="value">
-                <div class="icon-wrapper" :style="value == 'dark' ? 'width: 7rem' : ''">
+                <div class="icon-wrapper" :active="value=='dark'">
                     <TwoColorIcon :foreground="'#edebe5'" :background="'#000'"/>
                 </div>
             </MultiSelection>
@@ -22,6 +22,9 @@
 </template>
 
 <style scoped>
+    .icon-wrapper[active=true] {
+        width: 7rem !important;
+    }
     .icon-wrapper {
         width:5rem;
         transition: width 150ms;
